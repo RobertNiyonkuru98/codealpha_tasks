@@ -14,22 +14,34 @@ app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false}))
 
 app.get('/', async (req, res) => {
-    const shortUrl = await ShortUrl.find()
-    res.render('index', { shortUrl: shortUrl })
+    try {
+        const shortUrl = await ShortUrl.find()
+        res.render('index', { shortUrl: shortUrl })
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.post('/shortUrls', async (req, res) => {
-    await ShortUrl.create({ full: req.body.fullUrl })
-    res.redirect('/')
+    try {
+        await ShortUrl.create({ full: req.body.fullUrl })
+        res.redirect('/')
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.get('/:shortUrl', async (req, res) => {
-    const shortUrl = await ShortUrl.findOne({ short: req.params.shortUrl })
-    if (shortUrl == null) return res.sendStatus(404)
+    try {
+        const shortUrl = await ShortUrl.findOne({ short: req.params.shortUrl })
+        if (shortUrl == null) return res.sendStatus(404)
 
-    shortUrl.clicks++
-    await shortUrl.save()
-    res.redirect(shortUrl.full)
+        shortUrl.clicks++
+        await shortUrl.save()
+        res.redirect(shortUrl.full)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.listen(PORT, () => console.log('Server is started on Port ' + PORT))
