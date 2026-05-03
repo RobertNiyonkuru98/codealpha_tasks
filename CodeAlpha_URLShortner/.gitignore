@@ -1,3 +1,7 @@
 .env
 node_modules/
 package-lock.json
+app.js
+routes/subscribers.js
+models/subscriber.js
+playground-1.mongodb.js
