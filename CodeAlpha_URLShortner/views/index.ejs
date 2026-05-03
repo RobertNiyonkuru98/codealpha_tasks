@@ -12,9 +12,9 @@
     <div class="container">
         <h1>CodeAlpha URL Shortner</h1>
         <p>Be able to shorten URLs, For your own use.</p>
-        <form action="" method="POST" class="my-4 form-inline">
+        <form action="/shortUrls" method="POST" class="my-4 form-inline">
             <label for="fullUrl" class="sr-only ">Full URL</label>
-            <input required type="url" placeholder="Enter your URL" name="FullUrl" id="fullUrl" class="form-control col mr-2">
+            <input required type="url" placeholder="Enter your URL" name="fullUrl" id="fullUrl" class="form-control col mr-2">
             <button type="submit" class="btn btn-success">Shorten</button>
         </form>
     </div>
@@ -28,11 +28,13 @@
             </tr>
         </thead>
         <tbody>
+            <% shortUrl.forEach(shortUrl => { %>
             <tr>
-                <td><a href="https://github.com/RobertNiyonkuru98">https://github.com/RobertNiyonkuru98</a></td>
-                <td><a href="/MyGithub">MyGithub</a></td>
-                <td>10</td>
+                <td><a href="<%= shortUrl.full %>"><%= shortUrl.full %></a></td>
+                <td><a href="<%= shortUrl.short %>"><%= shortUrl.short %></a></td>
+                <td><%= shortUrl.clicks %></td>
             </tr>
+            <%}) %>
         </tbody>
     </table>
 </body>
