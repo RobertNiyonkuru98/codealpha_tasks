@@ -1,0 +1,6 @@
+shortid
+mongoose
+ejs
+express
+dotenv
+nodemon
