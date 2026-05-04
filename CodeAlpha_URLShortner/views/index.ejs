@@ -4,39 +4,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <title>URL SHORTNER</title>
 </head>
+<style>
+    :root {
+        --bg-color: #1c1917;
+        --card-bg: rgba(41, 37, 36, 0.7);
+        --primary: #f43f5e;
+        --primary-hover: #e11d48;
+        --secondary: #f59e0b;
+        --text-primary: #fafaf9;
+        --text-secondary: #a8a29e;
+        --accent: #fbbf24;
+        --glass-border: rgba(255, 255, 255, 0.05);
+        --font-main: cursive;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        background-image:
+            radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.1) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 800px;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        margin-bottom: 3rem;
+    }
+
+    .upper-page {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin: 0 0 1rem 0;
+        background-color: var(--primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.025em;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        color: var(--secondary);
+        font-weight: 400;
+        margin: 0;
+    }
+
+    .url-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .url-input-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .url-form input {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.6);
+        border: 2px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+    }
+
+    .url-form input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+        background: rgba(15, 23, 42, 0.8);
+    }
+
+    .url-form input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+        color: white;
+        border: solid 3px white;
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        border-radius: 16px;
+        cursor: pointer;
+        font-family: var(--font-main);
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background: transparent;
+        border: solid 3px var(--primary-hover);
+        color:var(--primary-hover);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .table-container {
+        width: 100%;
+        max-width: 1000px;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .url-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .url-table th {
+        background: rgba(139, 92, 246, 0.1);
+        padding: 1.25rem 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        border-bottom: 1px solid var(--glass-border);
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        letter-spacing: 0.05em;
+    }
+
+    .url-table td {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--glass-border);
+        color: var(--text-primary);
+        font-size: 1rem;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .url-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .url-table tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .url-table a {
+        color: var(--secondary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .url-table a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+    }
+
+    .hits-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--accent);
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+        .container {
+            padding: 1.5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+        }
+        .url-table th, .url-table td {
+            padding: 1rem;
+        }
+        .url-table td {
+            max-width: 150px;
+        }
+    }
+</style>
 
 <body>
     <div class="container">
-        <h1>CodeAlpha URL Shortner</h1>
-        <p>Be able to shorten URLs, For your own use.</p>
-        <form action="/shortUrls" method="POST" class="my-4 form-inline">
-            <label for="fullUrl" class="sr-only ">Full URL</label>
-            <input required type="url" placeholder="Enter your URL" name="fullUrl" id="fullUrl" class="form-control col mr-2">
-            <button type="submit" class="btn btn-success">Shorten</button>
+        <div class="upper-page">
+            <h1>CodeAlpha URL Shortener</h1>
+            <h3>Simplify your links with elegance and speed.</h3>
+        </div>
+        <form action="/shortUrls" method="POST" class="url-form">
+            <div class="url-input-container">
+                <input required type="url" placeholder="Paste your long URL here..." name="fullUrl" id="fullUrl" class="url-input">
+            </div>
+            <button type="submit" class="submit-btn">Shorten Now</button>
         </form>
     </div>
 
-    <table class="table table-striped table-responsive">
-        <thead>
-            <tr>
-                <th>Full Url</th>
-                <th>Short Url</th>
-                <th>Hits</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% shortUrl.forEach(shortUrl => { %>
-            <tr>
-                <td><a href="<%= shortUrl.full %>"><%= shortUrl.full %></a></td>
-                <td><a href="<%= shortUrl.short %>"><%= shortUrl.short %></a></td>
-                <td><%= shortUrl.clicks %></td>
-            </tr>
-            <%}) %>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="url-table">
+            <thead>
+                <tr>
+                    <th>Original Link</th>
+                    <th>Shortened URL</th>
+                    <th>Hits</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% shortUrl.forEach(shortUrl => { %>
+                <tr>
+                    <td><a href="<%= shortUrl.full %>" target="_blank"><%= shortUrl.full %></a></td>
+                    <td><a href="<%= shortUrl.short %>" target="_blank"><%= shortUrl.short %></a></td>
+                    <td><span class="hits-badge"><%= shortUrl.clicks %></span></td>
+                </tr>
+                <%}) %>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

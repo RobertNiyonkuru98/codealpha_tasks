@@ -24,7 +24,6 @@ app.get('/', async (req, res) => {
 
 app.post('/shortUrls', async (req, res) => {
     try {
-        // Check if the URL has already been shortened
         const existing = await ShortUrl.findOne({ full: req.body.fullUrl })
         if (existing) {
             return res.redirect('/')
