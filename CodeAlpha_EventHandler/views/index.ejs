@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Handler</title>
+</head>
+<body>
+
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+    <div class="container">
+        <h1>CodeAlpha Event Handler</h1>
+        <h3>Easiest way to Find and Register for events</h3>
+
+        <section class="create-event">
+            <h2>Create Event</h2>
+            <form action="/event" class="createEvent" method="POST">
+                <label for="title">Event Title</label>
+                <input type="text" name="title" id="title">
+
+            <label for="description">Description</label>
+            <input type="text" name="description" id="description">
+
+            <label for="date">Date</label>
+            <input type="date" name="date" id="date">
+
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location">
+
+            <label for="isOnline">Is Online</label>
+            <input type="checkbox" name="isOnline" id="isOnline">
+
+            <label for="category">Category</label>
+            <input type="text" name="category" id="category">
+
+            <label for="activity">Activity</label>
+            <input type="text" name="activity" id="activity">
+
+            <label for="imageUrl">Image URL</label>
+            <input type="text" name="imageUrl" id="imageUrl">
+
+            <label for="organizer">Organizer</label>
+            <input type="text" name="organizer" id="organizer">
+
+            <label for="registrationUrl">Registration URL</label>
+            <input type="text" name="registrationUrl" id="registrationUrl">
+
+            <label for="minParticipants">Minimum Participants</label>
+            <input type="number" name="minParticipants" id="minParticipants">
+
+            <label for="maxParticipants">Maximum Participants</label>
+            <input type="number" name="maxParticipants" id="maxParticipants">
+
+            <label for="slots">Slots</label>
+            <input type="number" name="slots" id="slots">
+
+            <label for="tickets">Tickets</label>
+            <input type="text" name="tickets" id="tickets">
+
+            <label for="attendees">Attendees</label>
+            <input type="text" name="attendees" id="attendees">
+
+            <label for="comments">Comments</label>
+            <input type="text" name="comments" id="comments">
+            </form>
+        </section>
+    </div>
+</body>
+</html>
