@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Information</title>
+</head>
+<body>
+    <header>
+    <nav>
+        <div class="nav-container">
+        <ul class="nav-links">
+            <li class="nav-link"><a href="#">Home</a></li>
+            <li class="nav-link"><a href="#">Profile</a></li>
+            <li class="nav-link"><a href="#">Bookings</a></li>
+            <li class="nav-link"><a href="#">Logout</a></li>
+        </ul>
+        </div>
+    </nav>
+    </header>
+    <main>
+        <section id="upcoming-event" class="upcoming-event">
+            <div class="container">
+                <h1>Upcoming Events</h1>
+                <div class="event-info">
+                    <div class="event-list">
+                        <div>
+                            <p><%=event.imageUrl%></p>
+                        </div>
+                        <div>
+                            <p><%=event.title%></p>
+                        </div>
+                        <div>
+                            <p><%=event.description%></p>
+                        </div>
+                        <div>
+                            <p><%=event.date%></p>
+                        </div>
+                        <div>
+                            <p><%=event.location%></p>
+                        </div>
+                        <div>
+                            <p><%=event.category%></p>
+                        </div>
+                        <div>
+                            <p><%=event.activity%></p>
+                        </div>
+                        <div>
+                            <p><%=event.organizer%></p>
+                        </div>
+                        <div>
+                            <p><%=event.minParticipants%></p>
+                        </div>
+                        <div>
+                            <p><%=event.maxParticipants%></p>
+                        </div>
+                        <div>
+                            <p><%=event.slots%></p>
+                        </div>
+                        <div>
+                            <p><%=event.tickets%></p>
+                        </div>
+                        <div>
+                            <p><%=event.attendees%></p>
+                        </div>
+                        <div>
+                            <p><%=event.comments%></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="event-info" class="event-info">
+                <div class="event-image">
+                    <img src="<%= event.imageUrl %>" alt="Event Image">
+                </div>
+                <div class="event-details">
+                    <h2><%= event.title %></h2>
+                    <p><%= event.description %></p>
+                    <p><%= event.date %></p>
+                    <p><%= event.location %></p>
+                    <p><%= event.isOnline %></p>
+                    <p><%= event.category %></p>
+                    <p><%= event.activity %></p>
+                    <p><%= event.organizer %></p>
+                    <p><%= event.minParticipants %></p>
+                    <p><%= event.maxParticipants %></p>
+                    <p><%= event.slots %></p>
+                    <p><%= event.tickets %></p>
+                    <p><%= event.attendees %></p>
+                    <p><%= event.comments %></p>
+                </div>
+
+                <section id="event-selection" class="event-selection">
+                    <div class="event-selection-info">
+                        <h2>Available Tickets</h2>
+                    </div>
+                    <div class="event-tickets">
+                        <div class="tickets">
+                        <% event.tickets.forEach(ticket => { %>
+                            <div class="ticket">
+                                <p><%= ticket.name %></p>
+                                <p><%= ticket.price %></p>
+                                <p><%= ticket.currency %></p>
+                            </div>
+                        <% }) %>
+                    </div>
+                    </div>
+                </section>
+
+                <section id="event-registration" class="event-registration">
+                    <h2>Register for an Event</h2>
+                    <form action="/event" method="POST">
+
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name">
+
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email">
+
+                    <label for="phone">Phone</label>
+                    <input type="text" name="phone" id="phone">
+
+                    <label for="gender">Gender</label>
+                    <input type="text" name="gender" id="gender">
+
+                    <button type="submit">Register</button>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+    <footer></footer>
+</body>
+</html>

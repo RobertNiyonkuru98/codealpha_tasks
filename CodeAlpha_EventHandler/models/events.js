@@ -1,6 +1,11 @@
+// Event List Table
 const mongoose = require('mongoose')
 
 const eventSchema = new mongoose.Schema({
+    eventId: {
+        type: Number,
+        required: true
+    },
     title: {
         type: String,
         required: true,
@@ -34,10 +39,6 @@ const eventSchema = new mongoose.Schema({
         required: true
     },
     organizer: {
-        type: String,
-        required: true
-    },
-    registrationUrl: {
         type: String,
         required: true
     },
