@@ -24,112 +24,83 @@
                 <h1>Upcoming Events</h1>
                 <div class="event-info">
                     <div class="event-list">
-                        <div>
-                            <p><%=event.imageUrl%></p>
-                        </div>
-                        <div>
-                            <p><%=event.title%></p>
-                        </div>
-                        <div>
-                            <p><%=event.description%></p>
-                        </div>
-                        <div>
-                            <p><%=event.date%></p>
-                        </div>
-                        <div>
-                            <p><%=event.location%></p>
-                        </div>
-                        <div>
-                            <p><%=event.category%></p>
-                        </div>
-                        <div>
-                            <p><%=event.activity%></p>
-                        </div>
-                        <div>
-                            <p><%=event.organizer%></p>
-                        </div>
-                        <div>
-                            <p><%=event.minParticipants%></p>
-                        </div>
-                        <div>
-                            <p><%=event.maxParticipants%></p>
-                        </div>
-                        <div>
-                            <p><%=event.slots%></p>
-                        </div>
-                        <div>
-                            <p><%=event.tickets%></p>
-                        </div>
-                        <div>
-                            <p><%=event.attendees%></p>
-                        </div>
-                        <div>
-                            <p><%=event.comments%></p>
-                        </div>
-                    </div>
-                </div>
+                        <% events.forEach(evt => { %>
+                            <div class="event-card">
+                                <p>Title: <%= evt.title %></p>
+                                <p>Description: <%= evt.description %></p>
+                                <p>Date: <%= evt.date %></p>
+                                <p>Location: <%= evt.location %></p>
+                                <p>Is Online: <%= evt.isOnline %></p>
+                                <p>Category: <%= evt.category %></p>
+                                <p>Activity: <%= evt.activity %></p>
+                                <p>Organizer: <%= evt.organizer %></p>
+                                <p>Min Participants: <%= evt.minParticipants %></p>
+                                <p>Max Participants: <%= evt.maxParticipants %></p>
+                                <p>Slots: <%= evt.slots %></p>
+                                <p>Tickets: <%= evt.tickets %></p>
+                                <p>Attendees: <%= evt.attendees %></p>
+                                <p>Comments: <%= evt.comments %></p>
+                                <p>Image: <%= evt.imageUrl %></p>
+                            </div>
+                            <button onclick="showDetails('<%= evt._id%>')">
+                                Show Details
+                            </button>
+                            <a href="/event/<%= evt._id %>/register">
+                                <button type="button">Register</button>
+                            </a>
+                        <%})%>
             </section>
 
-            <section id="event-info" class="event-info">
-                <div class="event-image">
-                    <img src="<%= event.imageUrl %>" alt="Event Image">
-                </div>
-                <div class="event-details">
-                    <h2><%= event.title %></h2>
-                    <p><%= event.description %></p>
-                    <p><%= event.date %></p>
-                    <p><%= event.location %></p>
-                    <p><%= event.isOnline %></p>
-                    <p><%= event.category %></p>
-                    <p><%= event.activity %></p>
-                    <p><%= event.organizer %></p>
-                    <p><%= event.minParticipants %></p>
-                    <p><%= event.maxParticipants %></p>
-                    <p><%= event.slots %></p>
-                    <p><%= event.tickets %></p>
-                    <p><%= event.attendees %></p>
-                    <p><%= event.comments %></p>
-                </div>
+            <section id="event-info" class="event-info" style="display: none;">
+                <h2 id="detail-title"></h2>
+                <p id="detail-desc"></p>
+                <p id="detail-date"></p>
+                <p id="detail-location"></p>
+                <p id="detail-isOnline"></p>
+                <p id="detail-category"></p>
+                <p id="detail-activity"></p>
+                <p id="detail-organizer"></p>
+                <p id="detail-minParticipants"></p>
+                <p id="detail-maxParticipants"></p>
+                <p id="detail-slots"></p>
+                <p id="detail-tickets"></p>
+                <p id="detail-attendees"></p>
+                <p id="detail-comments"></p>
+                <p id="detail-imageUrl"></p>
+                <p id="detail-registrationUrl"></p>
 
-                <section id="event-selection" class="event-selection">
-                    <div class="event-selection-info">
-                        <h2>Available Tickets</h2>
-                    </div>
-                    <div class="event-tickets">
-                        <div class="tickets">
-                        <% event.tickets.forEach(ticket => { %>
-                            <div class="ticket">
-                                <p><%= ticket.name %></p>
-                                <p><%= ticket.price %></p>
-                                <p><%= ticket.currency %></p>
-                            </div>
-                        <% }) %>
-                    </div>
-                    </div>
-                </section>
 
-                <section id="event-registration" class="event-registration">
-                    <h2>Register for an Event</h2>
-                    <form action="/event" method="POST">
-
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name">
-
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email">
-
-                    <label for="phone">Phone</label>
-                    <input type="text" name="phone" id="phone">
-
-                    <label for="gender">Gender</label>
-                    <input type="text" name="gender" id="gender">
-
-                    <button type="submit">Register</button>
-                    </form>
-                </section>
             </div>
         </section>
     </main>
     <footer></footer>
+    <script>
+        const allEvents = <%- JSON.stringify(events) %>;
+
+        function showDetails(eventId) {
+            const selectedEvent= allEvents.find(e => e._id === eventId)
+            if (selectedEvent) {
+            document.getElementById('detail-title').innerText = selectedEvent.title
+            document.getElementById('detail-desc').innerText = selectedEvent.description
+            document.getElementById('detail-date').innerText = selectedEvent.date
+            document.getElementById('detail-location').innerText = selectedEvent.location
+            document.getElementById('detail-isOnline').innerText = selectedEvent.isOnline
+            document.getElementById('detail-category').innerText = selectedEvent.category
+            document.getElementById('detail-activity').innerText = selectedEvent.activity
+            document.getElementById('detail-organizer').innerText = selectedEvent.organizer
+            document.getElementById('detail-minParticipants').innerText = selectedEvent.minParticipants
+            document.getElementById('detail-maxParticipants').innerText = selectedEvent.maxParticipants
+            document.getElementById('detail-slots').innerText = selectedEvent.slots
+            document.getElementById('detail-tickets').innerText = selectedEvent.tickets
+            document.getElementById('detail-attendees').innerText = selectedEvent.attendees
+            document.getElementById('detail-comments').innerText = selectedEvent.comments
+            document.getElementById('detail-imageUrl').innerText = selectedEvent.imageUrl
+            document.getElementById('detail-registrationUrl').innerText = selectedEvent.registrationUrl
+
+            document.getElementById('event-info').style.display = 'block';
+        }
+    }
+
+    </script>
 </body>
 </html>

@@ -3,15 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Application</title>
+    <title>Register - <%= event.title %></title>
 </head>
 <body>
-    <nav></nav>
+    <nav>
+        <a href="/">← Back to Events</a>
+    </nav>
     <main>
         <section>
             <div class="container">
-                <h1>Register for an Event</h1>
+                <h1>Register for: <%= event.title %></h1>
+                <p>Date: <%= event.date %></p>
+                <p>Location: <%= event.location %></p>
 
+                <form action="/event/<%= event._id %>/register" method="POST">
+                    <input type="hidden" name="eventId" value="<%= event._id %>">
+
+                    <label for="name">Your Name</label>
+                    <input type="text" name="name" id="name" required>
+
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required>
+
+                    <label for="phone">Phone</label>
+                    <input type="text" name="phone" id="phone" required>
+
+                    <label for="gender">Gender</label>
+                    <input type="text" name="gender" id="gender">
+
+                    <button type="submit">Confirm Registration</button>
+                </form>
             </div>
         </section>
     </main>

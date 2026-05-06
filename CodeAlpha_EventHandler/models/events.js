@@ -4,7 +4,8 @@ const mongoose = require('mongoose')
 const eventSchema = new mongoose.Schema({
     eventId: {
         type: Number,
-        required: true
+        required: false,
+        default: 0
     },
     title: {
         type: String,
@@ -36,7 +37,8 @@ const eventSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true
+        required: false,
+        default: ""
     },
     organizer: {
         type: String,

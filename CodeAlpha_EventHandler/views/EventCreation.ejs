@@ -24,7 +24,7 @@
 
         <section class="create-event">
             <h2>Create Event</h2>
-            <form action="/event" class="createEvent" method="POST">
+            <form action="/event/create" class="createEvent" method="POST">
                 <label for="title">Event Title</label>
                 <input type="text" name="title" id="title">
 
@@ -65,13 +65,20 @@
             <input type="number" name="slots" id="slots">
 
             <label for="tickets">Tickets</label>
-            <input type="text" name="tickets" id="tickets">
+            <select name="ticketName" id="ticketName">
+                <option value="">Select Ticket Type</option>
+                <option value="Free">Free Entry</option>
+                <option value="Standard">Standard (10,000 RWF)</option>
+                <option value="VIP">VIP (25,000 RWF)</option>
+                <option value="Gold">Gold (50,000 RWF)</option>
+            </select>
 
             <label for="attendees">Attendees</label>
             <input type="text" name="attendees" id="attendees">
 
             <label for="comments">Comments</label>
             <input type="text" name="comments" id="comments">
+            <button type="submit">Create Event</button>
             </form>
         </section>
     </div>
