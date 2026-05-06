@@ -26,10 +26,6 @@ const attendeeSchema = new mongoose.Schema({
     bookings: {
         type: [String]
     },
-    id: {
-        type: String,
-        default: attendeeId
-    }
 })
 
 module.exports = mongoose.model('Attendee', attendeeSchema)
