@@ -1,5 +1,14 @@
 const Users = require('../models/users')
 const bcrypt = require('bcrypt')
+const passport = require('passport')
+const initializePassport = require('../config/passport-config')
+
+
+initializePassport(
+    passport,
+    email => Users.findOne({ email: email }),       // Returns a Promise — Mongoose query
+    id => Users.findOne({ userId: id })             // Returns a Promise — Mongoose query
+)
 
 
 exports.register = async (req, res) => {
@@ -39,3 +48,9 @@ exports.registerUser = async (req, res) => {
         res.redirect('/register')
     }
 }
+
+exports.loginUser = passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    failureFlash: true
+})

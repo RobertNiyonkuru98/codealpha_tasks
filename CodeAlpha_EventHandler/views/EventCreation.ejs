@@ -18,7 +18,24 @@
             width: 100%;
         }
     </style>
-    <div class="container">
+    <header>
+        <nav>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li class="nav-link"><a href="#">Home</a></li>
+                    <li class="nav-link"><a href="#">Profile</a></li>
+                    <li class="nav-link"><a href="#">Bookings</a></li>
+                    <li class="nav-link">
+                        <form action="/logout" method="POST" style="display:inline;">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
         <h1>CodeAlpha Event Handler</h1>
         <h3>Easiest way to Find and Register for events</h3>
 
@@ -82,5 +99,11 @@
             </form>
         </section>
     </div>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <p>CodeAlpha Event Management System</p>
+        </div>
+    </footer>
 </body>
 </html>

@@ -6,11 +6,27 @@
     <title>Register - <%= event.title %></title>
 </head>
 <body>
+    <header>
     <nav>
-        <a href="/">← Back to Events</a>
+        <div class="nav-container">
+        <ul class="nav-links">
+            <li class="nav-link"><a href="/home">Home</a></li>
+            <li class="nav-link"><a href="/profile">Profile</a></li>
+            <li class="nav-link"><a href="/bookings">Bookings</a></li>
+            <li class="nav-link">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+        </div>
     </nav>
+    </header>
     <main>
         <section>
+    <nav>
+        <a href="/events">← Back to Events</a>
+    </nav>
             <div class="container">
                 <h1>Register for: <%= event.title %></h1>
                 <p>Date: <%= event.date %></p>

@@ -1,5 +1,15 @@
 const Event = require('../models/events')
 
+exports.dashboard = async (req, res) => {
+    try {
+        // Passport automatically puts the logged-in user in req.user
+        const user = req.user
+        if (!user) return res.redirect('/register')
+        res.render('EventDashboard', { user: user })
+    } catch (error) {
+        console.log(error)
+    }
+}
 // Get All Events
 exports.getAllEvents = async (req, res) => {
     try {
@@ -61,7 +71,7 @@ exports.createEvent = async (req, res) => {
                attendees: req.body.attendees ? [req.body.attendees] : [],
                comments: req.body.comments ? [req.body.comments] : []
            })
-           res.redirect('/')
+           res.redirect('/events')
        } catch (error) {
            console.log(error)
            res.status(500).send("An error occurred while creating the event.")
@@ -96,7 +106,7 @@ exports.registerEvent = async (req, res) => {
             await event.save();
             console.log(`Event ${event.title} is booked successfully for user ${name}`)
 
-            res.redirect("/")
+            res.redirect("/events")
             return;
         } else {
             res.status(404).send("Event not found")

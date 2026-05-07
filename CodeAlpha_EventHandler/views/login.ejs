@@ -10,10 +10,9 @@
         <nav>
             <div class="nav-container">
                 <ul class="nav-links">
-                    <li class="nav-link"><a href="#">Home</a></li>
-                    <li class="nav-link"><a href="#">Profile</a></li>
-                    <li class="nav-link"><a href="#">Bookings</a></li>
-                    <li class="nav-link"><a href="#">Logout</a></li>
+                    <li class="nav-link"><a href="/home">Home</a></li>
+                    <li class="nav-link"><a href="/profile">Profile</a></li>
+                    <li class="nav-link"><a href="/bookings">Bookings</a></li>
                 </ul>
             </div>
         </nav>
@@ -31,8 +30,11 @@
                         <label for="password">Password</label>
                         <input type="password" name="password" id="password" required>
                         <button type="submit">Login</button>
+                        <% if (messages.error) { %>
+                            <p><%= messages.error %></p>
+                        <% } %>
                     </form>
-                    <a href="/register">Don't have an account? Register here</a>
+                    <a href="/">Don't have an account? Register here</a>
                 </div>
             </div>
         </section>

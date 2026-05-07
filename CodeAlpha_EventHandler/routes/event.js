@@ -3,6 +3,7 @@ const router = express.Router()
 
 // Import controllers
 const {
+    dashboard,
     getAllEvents,
     createEventPage,
     createEvent,
@@ -10,15 +11,31 @@ const {
     registerEvent
 } = require('../controllers/eventController');
 
+// ---- Middleware ----
+// If the user is NOT logged in, redirect them to /register
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next() // They are logged in — let them through
+    }
+    res.redirect('/') // Not logged in — send them away
+}
 
-router.get('/', getAllEvents) // Loading the page with All the events
+// ---- Routes ----
+router.get('/home', checkAuthenticated, dashboard)
+router.get('/events', checkAuthenticated, getAllEvents)
 
-router.get('/event/create', createEventPage) // Loading the page with the form to create a new event
+router.get('/event/create', checkAuthenticated, createEventPage)
+router.post('/event/create', checkAuthenticated, createEvent)
 
-router.post('/event/create', createEvent) // Submitting the form to create a new event
+router.get('/event/:id/register', checkAuthenticated, registerEventPage)
+router.post('/event/:id/register', checkAuthenticated, registerEvent)
 
-router.get('/event/:id/register', registerEventPage) // Loading the page with the form to register for an event
-
-router.post('/event/:id/register', registerEvent) // Submitting the form to register for an event
+// ---- Logout ----
+router.post('/logout', (req, res) => {
+    req.logout(err => {
+        if (err) return res.status(500).send('Error logging out')
+        res.redirect('/')
+    })
+})
 
 module.exports = router
