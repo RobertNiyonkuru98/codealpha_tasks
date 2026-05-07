@@ -1,7 +1,4 @@
-const event = require('../models/events')
-const attendees = require('../models/attendees')
-const booking = require('../models/booking')
-const users = require('../models/users')
+const Event = require('../models/events')
 
 // Get All Events
 exports.getAllEvents = async (req, res) => {

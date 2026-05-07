@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li class="nav-link"><a href="#">Home</a></li>
+                    <li class="nav-link"><a href="#">Profile</a></li>
+                    <li class="nav-link"><a href="#">Bookings</a></li>
+                    <li class="nav-link"><a href="#">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="register">
+            <div class="register-container">
+                <div class="register-header">
+                    <h1>Register</h1>
+                </div>
+                <div class="register-content">
+                    <form action="/register" method="POST">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" required>
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required>
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <label for="mobile_number">Mobile Number</label>
+                        <input type="tel" name="mobile_number" id="mobile_number" required>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" required>
+                        <button type="submit">Register</button>
+                    </form>
+                    <a href="/login">Already have an account? Login here</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <p>CodeAlpha Event Management System</p>
+        </div>
+    </footer>
+</body>
+</html>
