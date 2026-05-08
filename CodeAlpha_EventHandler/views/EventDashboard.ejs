@@ -3,51 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - CodeAlpha</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
     <nav>
         <div class="nav-container">
-        <ul class="nav-links">
-            <li class="nav-link"><a href="/home">Home</a></li>
-            <li class="nav-link"><a href="/profile">Profile</a></li>
-            <li class="nav-link"><a href="/bookings">Bookings</a></li>
-            <li class="nav-link">
-                <form action="/logout" method="POST" style="display:inline;">
-                    <button type="submit">Logout</button>
-                </form>
-            </li>
-        </ul>
+            <h2 class="logo">EventHandler</h2>
+            <ul class="nav-links">
+                <li class="nav-link"><a href="/home">Home</a></li>
+                <li class="nav-link"><a href="/bookings">My Bookings</a></li>
+                <li class="nav-link">
+                    <form action="/logout" method="POST" style="display:inline; padding: 0; border: none; background: none;">
+                        <button type="submit" class="btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </nav>
     </header>
-    <main>
+    <main class="container">
         <section class="dashboard">
             <div>
                 <div class="dashboard-header">
-                    <h1>CodeAlpha Event Management System</h1>
+                    <h1>EventHandler</h1>
                 </div>
                 <div class="dashboard-content">
-                    <h1>Your dashboard</h1>
                     <% if (user) { %>
                         <h2>Hello <%= user.name %>!</h2>
                         <h3>Welcome back to our event booking platform.</h3>
-                        <button><a href="/events">View Upcoming Events</a></button>
+                        <button class="btn-primary"><a href="/events">View Upcoming Events</a></button>
                         <% if (user.role === 'admin') { %>
-                            <button><a href="/event/create">Create New Event</a></button>
+                            <button class="btn-outline" style="margin-left: 0.5rem;"><a href="/event/create">Create New Event</a></button>
                         <% } %>
-<% } else { %>
+                    <% } else { %>
                         <h2>Hello there!</h2>
                         <h3>Join us to explore and book amazing events.</h3>
-                        <div class="guest-buttons">
-                            <button><a href="/login">Login</a></button>
-                            <button><a href="/register">Register</a></button>
+                        <div class="guest-buttons" style="display: flex; gap: 1rem; justify-content: center;">
+                            <a href="/login" class="btn btn-primary">Sign In</a>
+                            <a href="/register" class="btn btn-outline">Create Account</a>
                         </div>
                     <% } %>
                 </div>
             </div>
         </section>
     </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/home">Home</a>
+                <a href="/events">Events</a>
+                <a href="/bookings">My Bookings</a>
+            </div>
+            <p>&copy; 2026 EventHandler. Powered by Robert Niyonkuru. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
