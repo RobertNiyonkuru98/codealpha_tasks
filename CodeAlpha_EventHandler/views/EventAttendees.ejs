@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendees - <%= event.title %></title>
+</head>
+<body>
+    <header>
+    <nav>
+        <div class="nav-container">
+        <ul class="nav-links">
+            <li class="nav-link"><a href="/home">Home</a></li>
+            <li class="nav-link"><a href="/events">Events</a></li>
+            <li class="nav-link"><a href="/bookings">My Bookings</a></li>
+            <li class="nav-link">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+        </div>
+    </nav>
+    </header>
+    <main>
+        <section class="attendees">
+            <div class="container">
+                <h1>Attendees for: <%= event.title %></h1>
+                <p><strong>Available Slots:</strong> <%= event.slots %> / <%= event.maxParticipants %></p>
+                <p><strong>Total Registered:</strong> <%= event.attendees.length %></p>
+
+                <hr>
+
+                <% if (event.attendees.length > 0) { %>
+                    <table border="1" cellpadding="10">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% event.attendees.forEach(attendee => { %>
+                                <tr>
+                                    <td><%= attendee.name %></td>
+                                    <td><%= attendee.email %></td>
+                                    <td><%= attendee.phone %></td>
+                                    <td><%= attendee.gender %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No one has registered for this event yet.</p>
+                <% } %>
+
+                <br>
+                <a href="/events"><button>Back to Events</button></a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

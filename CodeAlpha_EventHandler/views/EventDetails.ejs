@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Information</title>
+</head>
+<body>
+    <header>
+    <nav>
+        <div class="nav-container">
+        <ul class="nav-links">
+            <li class="nav-link"><a href="/home">Home</a></li>
+            <li class="nav-link"><a href="/profile">Profile</a></li>
+            <li class="nav-link"><a href="/bookings">Bookings</a></li>
+            <li class="nav-link">
+                <form action="/logout" method="POST" style="display:inline;">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+        </div>
+    </nav>
+    </header>
+    <main>
+        <section id="upcoming-event" class="upcoming-event">
+            <div class="container">
+                <h1>Upcoming Events</h1>
+                <div class="event-info">
+                    <div class="event-list">
+                        <% events.forEach(evt => { %>
+                            <div class="event-card">
+                                <p>Title: <%= evt.title %></p>
+                                <p>Description: <%= evt.description %></p>
+                                <p>Date: <%= evt.date %></p>
+                                <p>Location: <%= evt.location %></p>
+                                <p>Is Online: <%= evt.isOnline %></p>
+                                <p>Category: <%= evt.category %></p>
+                                <p>Activity: <%= evt.activity %></p>
+                                <p>Organizer: <%= evt.organizer %></p>
+                                <p>Min Participants: <%= evt.minParticipants %></p>
+                                <p>Max Participants: <%= evt.maxParticipants %></p>
+                                <p>Slots: <%= evt.slots %></p>
+                                <p>Tickets: <%= evt.tickets %></p>
+                                <p>Attendees: <%= evt.attendees %></p>
+                                <p>Comments: <%= evt.comments %></p>
+                                <p>Image: <%= evt.imageUrl %></p>
+                            <div class="actions">
+                                <button onclick="showDetails('<%= evt._id %>')">View Details</button>
+                                <a href="/event/<%= evt._id %>/register"><button>Register</button></a>
+                                <% if (user && user.role === 'admin') { %>
+                                    <a href="/event/<%= evt._id %>/attendees"><button style="background-color: #6c757d; color: white;">View Attendees</button></a>
+                                <% } %>
+                            </div>
+                            </div>
+                        <%})%>
+            </section>
+
+            <section id="event-info" class="event-info" style="display: none;">
+                <h2 id="detail-title"></h2>
+                <p id="detail-desc"></p>
+                <p id="detail-date"></p>
+                <p id="detail-location"></p>
+                <p id="detail-isOnline"></p>
+                <p id="detail-category"></p>
+                <p id="detail-activity"></p>
+                <p id="detail-organizer"></p>
+                <p id="detail-minParticipants"></p>
+                <p id="detail-maxParticipants"></p>
+                <p id="detail-slots"></p>
+                <p id="detail-tickets"></p>
+                <p id="detail-attendees"></p>
+                <p id="detail-comments"></p>
+                <p id="detail-imageUrl"></p>
+                <p id="detail-registrationUrl"></p>
+
+
+            </div>
+        </section>
+    </main>
+    <footer></footer>
+    <script>
+        const allEvents = <%- JSON.stringify(events) %>;
+
+        function showDetails(eventId) {
+            const selectedEvent= allEvents.find(e => e._id === eventId)
+            if (selectedEvent) {
+            document.getElementById('detail-title').innerText = selectedEvent.title
+            document.getElementById('detail-desc').innerText = selectedEvent.description
+            document.getElementById('detail-date').innerText = selectedEvent.date
+            document.getElementById('detail-location').innerText = selectedEvent.location
+            document.getElementById('detail-isOnline').innerText = selectedEvent.isOnline
+            document.getElementById('detail-category').innerText = selectedEvent.category
+            document.getElementById('detail-activity').innerText = selectedEvent.activity
+            document.getElementById('detail-organizer').innerText = selectedEvent.organizer
+            document.getElementById('detail-minParticipants').innerText = selectedEvent.minParticipants
+            document.getElementById('detail-maxParticipants').innerText = selectedEvent.maxParticipants
+            document.getElementById('detail-slots').innerText = selectedEvent.slots
+            document.getElementById('detail-tickets').innerText = selectedEvent.tickets
+            document.getElementById('detail-attendees').innerText = selectedEvent.attendees
+            document.getElementById('detail-comments').innerText = selectedEvent.comments
+            document.getElementById('detail-imageUrl').innerText = selectedEvent.imageUrl
+            document.getElementById('detail-registrationUrl').innerText = selectedEvent.registrationUrl
+
+            document.getElementById('event-info').style.display = 'block';
+        }
+    }
+
+    </script>
+</body>
+</html>
