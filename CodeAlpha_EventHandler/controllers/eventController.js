@@ -14,7 +14,7 @@ exports.dashboard = async (req, res) => {
 exports.getAllEvents = async (req, res) => {
     try {
         const events = await Event.find();
-        res.render('EventDetails', { events: events });
+        res.render('EventDetails', { events: events, user: req.user });
     } catch (error) {
         console.log(error);
         res.status(500).send("An error occurred while fetching the events.");
@@ -97,9 +97,14 @@ exports.registerEvent = async (req, res) => {
         const event = await Event.findById(eventId);
 
         if (event) {
+            // Check if slots are available
+            if (event.slots <= 0) {
+                return res.status(400).send("Sorry, this event is fully booked!");
+            }
+
             // 1. Create a new Booking record
             await Booking.create({
-                userId: req.user._id, // Use ObjectId
+                userId: req.user._id,
                 eventId: event._id,
                 status: 'Confirmed'
             })
@@ -108,9 +113,13 @@ exports.registerEvent = async (req, res) => {
             event.attendees.push({
                 name: req.user.name,
                 email: req.user.email,
-                phone: req.user.mobile_number || req.body.phone,
-                gender: req.user.gender || req.body.gender
+                phone: String(req.user.mobile_number), // Fix: Force to String to avoid CastError
+                gender: req.user.gender
             });
+
+            // 3. Decrement available slots
+            event.slots -= 1;
+
             await event.save();
             
             console.log(`Event ${event.title} is booked successfully for user ${req.user.name}`)
@@ -123,5 +132,17 @@ exports.registerEvent = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).send("An error occurred while booking the event." + error.message)
+    }
+}
+
+exports.getEventAttendees = async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id)
+        if (!event) return res.status(404).send("Event not found")
+        
+        res.render('EventAttendees', { event: event, user: req.user })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Error fetching attendee list")
     }
 }

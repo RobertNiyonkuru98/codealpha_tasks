@@ -8,7 +8,8 @@ const {
     createEventPage,
     createEvent,
     registerEventPage,
-    registerEvent
+    registerEvent,
+    getEventAttendees
 } = require('../controllers/eventController');
 
 const {checkAuthenticated, checkAdmin} = require('../middleware/auth')
@@ -22,6 +23,8 @@ router.post('/event/create', checkAuthenticated, checkAdmin, createEvent)
 
 router.get('/event/:id/register', checkAuthenticated, registerEventPage)
 router.post('/event/:id/register', checkAuthenticated, registerEvent)
+
+router.get('/event/:id/attendees', checkAuthenticated, checkAdmin, getEventAttendees)
 
 // ---- Logout ----
 router.post('/logout', (req, res) => {

@@ -45,13 +45,14 @@
                                 <p>Attendees: <%= evt.attendees %></p>
                                 <p>Comments: <%= evt.comments %></p>
                                 <p>Image: <%= evt.imageUrl %></p>
+                            <div class="actions">
+                                <button onclick="showDetails('<%= evt._id %>')">View Details</button>
+                                <a href="/event/<%= evt._id %>/register"><button>Register</button></a>
+                                <% if (user && user.role === 'admin') { %>
+                                    <a href="/event/<%= evt._id %>/attendees"><button style="background-color: #6c757d; color: white;">View Attendees</button></a>
+                                <% } %>
                             </div>
-                            <button onclick="showDetails('<%= evt._id%>')">
-                                Show Details
-                            </button>
-                            <a href="/event/<%= evt._id %>/register">
-                                <button type="button">Register</button>
-                            </a>
+                            </div>
                         <%})%>
             </section>
 
