@@ -36,16 +36,20 @@
                     <input type="hidden" name="eventId" value="<%= event._id %>">
 
                     <label for="name">Your Name</label>
-                    <input type="text" name="name" id="name" required>
+                    <input type="text" name="name" id="name" value="<%= user.name %>" readonly>
 
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" required>
+                    <input type="email" name="email" id="email" value="<%= user.email %>" readonly>
 
                     <label for="phone">Phone</label>
-                    <input type="text" name="phone" id="phone" required>
+                    <input type="text" name="phone" id="phone" value="<%= user.mobile_number %>" required>
 
                     <label for="gender">Gender</label>
-                    <input type="text" name="gender" id="gender">
+                    <select name="gender" id="gender" required>
+                        <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                        <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                        <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+                    </select>
 
                     <button type="submit">Confirm Registration</button>
                 </form>

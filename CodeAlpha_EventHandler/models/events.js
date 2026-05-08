@@ -78,14 +78,15 @@ const eventSchema = new mongoose.Schema({
             }
         ]
     },
-    attendees: {
-        type: [
-            {
-                type: String,
-                required: true
-            }
-        ]
-    },
+   attendees: [
+    {
+        name: { type: String, required: true },
+        email: { type: String, required: true },
+        phone: { type: String, required: true },
+        gender: { type: String, required: true }
+    }
+],
+
     comments: {
         type: [
             {

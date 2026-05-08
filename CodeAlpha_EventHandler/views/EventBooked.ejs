@@ -10,9 +10,9 @@
     <nav>
         <div class="nav-container">
         <ul class="nav-links">
-            <li class="nav-link"><a href="#">Home</a></li>
-            <li class="nav-link"><a href="#">Profile</a></li>
-            <li class="nav-link"><a href="#">Bookings</a></li>
+            <li class="nav-link"><a href="/home">Home</a></li>
+            <li class="nav-link"><a href="/profile">Profile</a></li>
+            <li class="nav-link"><a href="/bookings">Bookings</a></li>
             <li class="nav-link">
                 <form action="/logout" method="POST" style="display:inline;">
                     <button type="submit">Logout</button>
@@ -23,16 +23,33 @@
     </nav>
     </header>
     <main>
-        <section class="dashboard">
-            <div>
-                <div class="dashboard-header">
-                    <h1>CodeAlpha Event Management System</h1>
-                </div>
-                <div class="dashboard-content">
-                    <h1>Your bookings</h1>
-                    <h2>Hello <%= user.name %>!</h2>
-                    <h3>Here are the events you have booked for:</h3>
-                </div>
+        <section class="bookings">
+            <div class="container">
+                <h1>Your Bookings</h1>
+                <p>Hello <%= user.name %>, Here are the events you've joined:</p>
+
+                <% if (bookings.length > 0) { %>
+                    <div class="booking list">
+                        <% bookings.forEach(booking => { %>
+                            <div class="booking-card">
+                                <h3><%= booking.eventId.title %></h3>
+                                <p><strong>Date:</strong><%= booking.eventId.date %></p>
+                                <p><strong>Location:</strong><%= booking.eventId.location %></p>
+                                <p><strong>Status:</strong><%= booking.status %></p>
+                                <div class="booking-actions">
+                                    <a href="/events">
+                                        <button type="button">View Details</button>
+                                    </a>
+                                    <form action="/bookings/cancel/<%= booking._id %>" method="POST" style="display:inline;">
+                                        <button type="submit" onclick="return confirm('Are you sure you wanna cancel this booking?')">Cancel Booking</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p>You haven't booked any events yet. Go and explore available events!</p>
+                <% } %>
             </div>
         </section>
     </main>

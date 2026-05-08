@@ -1,19 +1,21 @@
-const booking = require('../models/booking')
-const attendees = require('../models/attendees')
-const events = require('../models/events')
+const Booking = require('../models/booking')
 
-exports.bookEvent = async (req, res) => {
+exports.getUserBookings = async (req, res) => {
     try {
-        const { eventId, attendeeId } = req.body
-        const event = await events.findById(eventId)
-        const attendee = await attendees.findById(attendeeId)
-        const booking = new booking({
-            event: eventId,
-            attendee: attendeeId
-        })
-        await booking.save()
-        res.status(201).json(booking)
+        const bookings = await Booking.find({userId: req.user._id}).populate('eventId');
+        res.render('EventBooked', { user: req.user, bookings: bookings });
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        console.log(error);
+        res.status(500).send("Error fetching bookings.");
+    }
+}
+
+exports.cancelBooking = async (req, res) => {
+    try {
+        await Booking.findByIdAndDelete(req.params.id);
+        res.redirect('/bookings')
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Could not cancel booking.");
     }
 }

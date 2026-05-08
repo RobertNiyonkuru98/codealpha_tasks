@@ -20,7 +20,14 @@ function initialize(passport, getUserByEmail, getUserById) {
     }
     passport.use(new LocalStrategy({usernameField: 'email'}, authenticateUser))
     passport.serializeUser((user, done) => done(null, user.userId))
-    passport.deserializeUser((id, done) => done(null, getUserById(id)))
+    passport.deserializeUser(async (id, done) => {
+        try {
+            const user = await getUserById(id)  // wait for Mongoose to fetch the user
+            done(null, user)                    // now req.user will have the real data
+        } catch (error) {
+            done(error)
+        }
+    })
 
 }
 

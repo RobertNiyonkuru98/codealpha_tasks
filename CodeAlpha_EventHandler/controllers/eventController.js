@@ -1,11 +1,11 @@
 const Event = require('../models/events')
+const Booking = require('../models/booking')
 
 exports.dashboard = async (req, res) => {
     try {
-        // Passport automatically puts the logged-in user in req.user
-        const user = req.user
-        if (!user) return res.redirect('/register')
-        res.render('EventDashboard', { user: user })
+        // Handle both Guest and Logged-in User
+        const user = req.user || null;
+        res.render('EventDashboard', { user: user });
     } catch (error) {
         console.log(error)
     }
@@ -68,8 +68,8 @@ exports.createEvent = async (req, res) => {
                maxParticipants: req.body.maxParticipants || 0,
                slots: req.body.slots || 0,
                tickets: tickets,
-               attendees: req.body.attendees ? [req.body.attendees] : [],
-               comments: req.body.comments ? [req.body.comments] : []
+               attendees: [],
+               comments: []
            })
            res.redirect('/events')
        } catch (error) {
@@ -82,7 +82,7 @@ exports.registerEventPage = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id)
         if (!event) return res.status(404).send("Event not found")
-        res.render('EventRegister', { event: event })
+        res.render('EventRegister', { event: event, user: req.user })
     } catch (error) {
         console.log(error)
         res.status(500).send(error.message)
@@ -97,19 +97,28 @@ exports.registerEvent = async (req, res) => {
         const event = await Event.findById(eventId);
 
         if (event) {
+            // 1. Create a new Booking record
+            await Booking.create({
+                userId: req.user._id, // Use ObjectId
+                eventId: event._id,
+                status: 'Confirmed'
+            })
+
+            // 2. Add user to the Event's attendee list
             event.attendees.push({
-                name: name,
-                email: email,
-                phone: phone,
-                gender: gender
+                name: req.user.name,
+                email: req.user.email,
+                phone: req.user.mobile_number || req.body.phone,
+                gender: req.user.gender || req.body.gender
             });
             await event.save();
-            console.log(`Event ${event.title} is booked successfully for user ${name}`)
-
-            res.redirect("/events")
+            
+            console.log(`Event ${event.title} is booked successfully for user ${req.user.name}`)
+            res.redirect("/bookings")
             return;
-        } else {
-            res.status(404).send("Event not found")
+        }
+ else {
+            res.status(500).send("Event not found")
         }
     } catch (error) {
         console.log(error)
