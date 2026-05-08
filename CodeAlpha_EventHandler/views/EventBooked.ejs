@@ -1,57 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bookings</title>
+    <title>My Bookings - EventHandler</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
     <nav>
         <div class="nav-container">
-        <ul class="nav-links">
-            <li class="nav-link"><a href="/home">Home</a></li>
-            <li class="nav-link"><a href="/profile">Profile</a></li>
-            <li class="nav-link"><a href="/bookings">Bookings</a></li>
-            <li class="nav-link">
-                <form action="/logout" method="POST" style="display:inline;">
-                    <button type="submit">Logout</button>
-                </form>
-            </li>
-        </ul>
+            <h2 class="logo">EventHandler</h2>
+            <ul class="nav-links">
+                <li class="nav-link"><a href="/home">Home</a></li>
+                <li class="nav-link"><a href="/bookings">My Bookings</a></li>
+                <li class="nav-link">
+                    <form action="/logout" method="POST" style="display:inline; padding: 0; border: none; background: none;">
+                        <button type="submit" class="btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </nav>
     </header>
-    <main>
+    <main class="container" style="padding: 4rem 0;">
         <section class="bookings">
-            <div class="container">
-                <h1>Your Bookings</h1>
-                <p>Hello <%= user.name %>, Here are the events you've joined:</p>
+            <h1>Your Bookings</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Manage your upcoming event registrations.</p>
 
-                <% if (bookings.length > 0) { %>
-                    <div class="booking list">
+            <% if (bookings.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <% bookings.forEach(booking => { %>
-                            <div class="booking-card">
-                                <h3><%= booking.eventId.title %></h3>
-                                <p><strong>Date:</strong><%= booking.eventId.date %></p>
-                                <p><strong>Location:</strong><%= booking.eventId.location %></p>
-                                <p><strong>Status:</strong><%= booking.status %></p>
-                                <div class="booking-actions">
-                                    <a href="/events">
-                                        <button type="button">View Details</button>
-                                    </a>
-                                    <form action="/bookings/cancel/<%= booking._id %>" method="POST" style="display:inline;">
-                                        <button type="submit" onclick="return confirm('Are you sure you wanna cancel this booking?')">Cancel Booking</button>
+                            <tr>
+                                <td><strong><%= booking.eventId.title %></strong></td>
+                                <td><%= booking.eventId.date %></td>
+                                <td><span class="badge badge-success"><%= booking.status %></span></td>
+                                <td>
+                                    <form action="/bookings/cancel/<%= booking._id %>" method="POST" style="display:inline; padding: 0; border: none; background: none; max-width: none; margin: 0;">
+                                        <button type="submit" class="btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Cancel</button>
                                     </form>
-                                </div>
-                            </div>
+                                </td>
+                            </tr>
                         <% }) %>
-                    </div>
-                <% } else { %>
-                    <p>You haven't booked any events yet. Go and explore available events!</p>
-                <% } %>
-            </div>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div style="text-align: center; padding: 4rem; background: var(--surface-color); border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You haven't booked any events yet.</p>
+                    <a href="/events" class="btn btn-primary">Browse Events</a>
+                </div>
+            <% } %>
         </section>
     </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/home">Home</a>
+                <a href="/events">Events</a>
+                <a href="/bookings">My Bookings</a>
+            </div>
+            <p>&copy; 2026 EventHandler. Powered by Robert Niyonkuru. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

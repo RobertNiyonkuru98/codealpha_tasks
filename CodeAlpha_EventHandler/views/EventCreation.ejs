@@ -3,44 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Handler</title>
+    <title>Create Event - EventHandler</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <style>
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        input {
-            padding: 10px;
-            width: 100%;
-        }
-    </style>
     <header>
-        <nav>
-            <div class="nav-container">
-                <ul class="nav-links">
-                    <li class="nav-link"><a href="#">Home</a></li>
-                    <li class="nav-link"><a href="#">Profile</a></li>
-                    <li class="nav-link"><a href="#">Bookings</a></li>
-                    <li class="nav-link">
-                        <form action="/logout" method="POST" style="display:inline;">
-                            <button type="submit">Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+    <nav>
+        <div class="nav-container">
+            <h2 class="logo">EventHandler</h2>
+            <ul class="nav-links">
+                <li class="nav-link"><a href="/home">Home</a></li>
+                <li class="nav-link"><a href="/bookings">My Bookings</a></li>
+                <li class="nav-link">
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
     </header>
-    <main>
-        <div class="container">
-        <h1>CodeAlpha Event Handler</h1>
-        <h3>Easiest way to Find and Register for events</h3>
+    <main class="container">
+        <section>
+            <h1>Create a New Event</h1>
 
-        <section class="create-event">
-            <h2>Create Event</h2>
             <form action="/event/create" class="createEvent" method="POST">
                 <label for="title">Event Title</label>
                 <input type="text" name="title" id="title">
@@ -102,7 +89,7 @@
     </main>
     <footer>
         <div class="footer-container">
-            <p>CodeAlpha Event Management System</p>
+            <p>&copy; 2026 EventHandler. Powered by Robert Niyonkuru. All rights reserved.</p>
         </div>
     </footer>
 </body>

@@ -19,6 +19,7 @@ db.on('error', () => console.error(err))
 db.once('open', () => console.log('Connected to Database'))
 
 app.set('view engine', 'ejs')
+app.use(express.static('public')) // Serve CSS, images, etc.
 app.use(express.urlencoded({extended: false}))
 app.use(flash())
 app.use(session({

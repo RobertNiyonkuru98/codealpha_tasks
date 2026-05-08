@@ -3,109 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Information</title>
+    <title>Events - EventHandler</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <header>
     <nav>
         <div class="nav-container">
-        <ul class="nav-links">
-            <li class="nav-link"><a href="/home">Home</a></li>
-            <li class="nav-link"><a href="/profile">Profile</a></li>
-            <li class="nav-link"><a href="/bookings">Bookings</a></li>
-            <li class="nav-link">
-                <form action="/logout" method="POST" style="display:inline;">
-                    <button type="submit">Logout</button>
-                </form>
-            </li>
-        </ul>
+            <h2 class="logo">EventHandler</h2>
+            <ul class="nav-links">
+                <li class="nav-link"><a href="/home">Home</a></li>
+                <li class="nav-link"><a href="/bookings">My Bookings</a></li>
+                <li class="nav-link">
+                    <form action="/logout" method="POST" style="display:inline; padding: 0; border: none; background: none;">
+                        <button type="submit" class="btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </nav>
     </header>
-    <main>
-        <section id="upcoming-event" class="upcoming-event">
-            <div class="container">
-                <h1>Upcoming Events</h1>
-                <div class="event-info">
-                    <div class="event-list">
-                        <% events.forEach(evt => { %>
-                            <div class="event-card">
-                                <p>Title: <%= evt.title %></p>
-                                <p>Description: <%= evt.description %></p>
-                                <p>Date: <%= evt.date %></p>
-                                <p>Location: <%= evt.location %></p>
-                                <p>Is Online: <%= evt.isOnline %></p>
-                                <p>Category: <%= evt.category %></p>
-                                <p>Activity: <%= evt.activity %></p>
-                                <p>Organizer: <%= evt.organizer %></p>
-                                <p>Min Participants: <%= evt.minParticipants %></p>
-                                <p>Max Participants: <%= evt.maxParticipants %></p>
-                                <p>Slots: <%= evt.slots %></p>
-                                <p>Tickets: <%= evt.tickets %></p>
-                                <p>Attendees: <%= evt.attendees %></p>
-                                <p>Comments: <%= evt.comments %></p>
-                                <p>Image: <%= evt.imageUrl %></p>
-                            <div class="actions">
-                                <button onclick="showDetails('<%= evt._id %>')">View Details</button>
-                                <a href="/event/<%= evt._id %>/register"><button>Register</button></a>
+    <main class="container">
+        <section id="events-section" class="events">
+            <h1 style="margin-top: 2rem;">Upcoming Events</h1>
+            <div class="event-grid">
+                <% events.forEach(evt => { %>
+                    <div class="event-card">
+                        <div class="event-image">
+                            <img src="<%= evt.imageUrl || 'https://via.placeholder.com/400x200' %>" alt="<%= evt.title %>">
+                        </div>
+                        <div class="event-content">
+                            <h3><%= evt.title %></h3>
+                            <p><strong>Date:</strong> <%= evt.date %></p>
+                            <p><strong>Location:</strong> <%= evt.location %></p>
+                            <p><strong>Slots Left:</strong> <%= evt.slots %></p>
+
+                            <div class="actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button class="btn-outline" onclick="showDetails('<%= evt._id %>')">View Details</button>
+                                <a href="/event/<%= evt._id %>/register" class="btn btn-primary">Register</a>
                                 <% if (user && user.role === 'admin') { %>
-                                    <a href="/event/<%= evt._id %>/attendees"><button style="background-color: #6c757d; color: white;">View Attendees</button></a>
+                                    <a href="/event/<%= evt._id %>/attendees" class="btn btn-outline" style="background-color: #6c757d; color: white;">Attendees</a>
                                 <% } %>
                             </div>
-                            </div>
-                        <%})%>
-            </section>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
 
-            <section id="event-info" class="event-info" style="display: none;">
-                <h2 id="detail-title"></h2>
-                <p id="detail-desc"></p>
-                <p id="detail-date"></p>
-                <p id="detail-location"></p>
-                <p id="detail-isOnline"></p>
-                <p id="detail-category"></p>
-                <p id="detail-activity"></p>
-                <p id="detail-organizer"></p>
-                <p id="detail-minParticipants"></p>
-                <p id="detail-maxParticipants"></p>
-                <p id="detail-slots"></p>
-                <p id="detail-tickets"></p>
-                <p id="detail-attendees"></p>
-                <p id="detail-comments"></p>
-                <p id="detail-imageUrl"></p>
-                <p id="detail-registrationUrl"></p>
+        <!-- Premium Detail Card (Hidden by default) -->
+        <section id="event-info" class="fade-in" style="display: none; padding-bottom: 4rem;">
+            <button class="btn-outline" onclick="hideDetails()" style="margin-bottom: 2rem;">← Back to All Events</button>
 
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div>
+                        <h1 id="detail-title" style="margin-bottom: 0.5rem;"></h1>
+                        <span id="detail-category" class="badge badge-info"></span>
+                    </div>
+                    <a id="detail-register-btn" href="#" class="btn btn-primary">Register for this Event</a>
+                </div>
 
+                <div class="detail-info-grid">
+                    <div class="info-item">
+                        <label>Description</label>
+                        <p id="detail-desc"></p>
+                    </div>
+                    <div class="info-item">
+                        <label>Date & Time</label>
+                        <p id="detail-date"></p>
+                    </div>
+                    <div class="info-item">
+                        <label>Location</label>
+                        <p id="detail-location"></p>
+                    </div>
+                    <div class="info-item">
+                        <label>Organizer</label>
+                        <p id="detail-organizer"></p>
+                    </div>
+                    <div class="info-item">
+                        <label>Available Slots</label>
+                        <p id="detail-slots"></p>
+                    </div>
+                    <div class="info-item">
+                        <label>Attendance Type</label>
+                        <p id="detail-isOnline"></p>
+                    </div>
+                </div>
+
+                <div class="detail-image" style="width: 100%; border-radius: 12px; overflow: hidden; height: 300px;">
+                    <img id="detail-imageUrl" src="" alt="Event Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
             </div>
         </section>
     </main>
-    <footer></footer>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/home">Home</a>
+                <a href="/events">Events</a>
+                <a href="/bookings">My Bookings</a>
+            </div>
+            <p>&copy; 2026 EventHandler. Powered by Robert Niyonkuru. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script>
         const allEvents = <%- JSON.stringify(events) %>;
 
         function showDetails(eventId) {
-            const selectedEvent= allEvents.find(e => e._id === eventId)
+            const selectedEvent = allEvents.find(e => e._id === eventId)
             if (selectedEvent) {
-            document.getElementById('detail-title').innerText = selectedEvent.title
-            document.getElementById('detail-desc').innerText = selectedEvent.description
-            document.getElementById('detail-date').innerText = selectedEvent.date
-            document.getElementById('detail-location').innerText = selectedEvent.location
-            document.getElementById('detail-isOnline').innerText = selectedEvent.isOnline
-            document.getElementById('detail-category').innerText = selectedEvent.category
-            document.getElementById('detail-activity').innerText = selectedEvent.activity
-            document.getElementById('detail-organizer').innerText = selectedEvent.organizer
-            document.getElementById('detail-minParticipants').innerText = selectedEvent.minParticipants
-            document.getElementById('detail-maxParticipants').innerText = selectedEvent.maxParticipants
-            document.getElementById('detail-slots').innerText = selectedEvent.slots
-            document.getElementById('detail-tickets').innerText = selectedEvent.tickets
-            document.getElementById('detail-attendees').innerText = selectedEvent.attendees
-            document.getElementById('detail-comments').innerText = selectedEvent.comments
-            document.getElementById('detail-imageUrl').innerText = selectedEvent.imageUrl
-            document.getElementById('detail-registrationUrl').innerText = selectedEvent.registrationUrl
+                // Populate Data
+                document.getElementById('detail-title').innerText = selectedEvent.title
+                document.getElementById('detail-desc').innerText = selectedEvent.description
+                document.getElementById('detail-date').innerText = selectedEvent.date
+                document.getElementById('detail-location').innerText = selectedEvent.location
+                document.getElementById('detail-isOnline').innerText = selectedEvent.isOnline ? "Online Event" : "On-site Event"
+                document.getElementById('detail-category').innerText = selectedEvent.category
+                document.getElementById('detail-organizer').innerText = selectedEvent.organizer
+                document.getElementById('detail-slots').innerText = selectedEvent.slots + " slots left"
+                document.getElementById('detail-imageUrl').src = selectedEvent.imageUrl || 'https://via.placeholder.com/800x400'
+                document.getElementById('detail-register-btn').href = `/event/${selectedEvent._id}/register`
 
-            document.getElementById('event-info').style.display = 'block';
+                // Smooth Transition
+                document.getElementById('events-section').style.display = 'none';
+                document.getElementById('event-info').style.display = 'block';
+                window.scrollTo(0, 0);
+            }
         }
-    }
 
+        function hideDetails() {
+            document.getElementById('event-info').style.display = 'none';
+            document.getElementById('events-section').style.display = 'block';
+        }
     </script>
 </body>
 </html>
