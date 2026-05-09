@@ -25,4 +25,4 @@ const tableSchema = new mongoose.Schema({
     }
 })
 
-module.exports = new mongoose.model('Table', tableSchema)
+module.exports = mongoose.model('Table', tableSchema)
