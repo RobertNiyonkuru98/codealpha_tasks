@@ -1,3 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const tableController = require('../controllers/tableController')
+const { createTable, getAllTables } = require('../controllers/tableController')
+
+router.get('/get/tables', getAllTables)
+router.post('/add/table', createTable)
+
+module.exports = router;

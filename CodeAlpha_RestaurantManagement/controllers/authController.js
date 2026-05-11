@@ -35,7 +35,8 @@ exports.registerUser = async (req, res) => {
             email: req.body.email,
             mobile_number: req.body.mobile_number,
             gender: req.body.gender,
-            password: hashedPassword
+            password: hashedPassword,
+            role: req.body.role || 'customer'
         })
         console.log(`User ${req.body.name} with email ${req.body.email} has been registered successfully`)
         res.redirect('/login')

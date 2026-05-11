@@ -32,3 +32,21 @@ exports.createOrder = async (req, res) => {
         res.status(500).json({message: error.message})
     }
 }
+
+exports.completeOrder = async (req, res) => {
+    try {
+        const {orderId} = req.params;
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({message: 'Order not found'})
+        }
+
+        order.status = 'completed';
+        order.paymentStatus = 'paid';
+        await order.save();
+        await Table.findByIdAndUpdate(order.tableId, {status: 'available'})
+        res.status(200).json({message: 'Order completed successfully'})
+    } catch (error) {
+        res.status(500).json({message: 'Error completing order', error: error.message})
+    }
+}

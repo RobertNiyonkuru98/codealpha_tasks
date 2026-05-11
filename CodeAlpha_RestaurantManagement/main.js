@@ -9,6 +9,12 @@ const flash = require('express-flash')
 const session = require('express-session')
 const passport = require('passport')
 const authRouter = require('./routes/auth')
+const menuRouter = require('./routes/menu')
+const tableRouter = require('./routes/table')
+const reservationRouter = require('./routes/reservation')
+const orderRouter = require('./routes/order')
+const inventoryRouter = require('./routes/inventory')
+const reportRouter = require('./routes/report')
 
 
 db.on('error', (error) => console.log(error));
@@ -27,7 +33,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/', authRouter)
+app.use('/', authRouter, menuRouter, tableRouter, reservationRouter, orderRouter, inventoryRouter, reportRouter)
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
