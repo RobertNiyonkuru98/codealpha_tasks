@@ -1,5 +1,15 @@
 const Inventory = require('../models/inventories.js')
 
+exports.getInventoryPage = async (req, res) => {
+    try {
+        const allItems = await Inventory.find();
+        res.render('inventory', { inventory: allItems, message: null })
+    } catch (error) {
+        console.log(error)
+        res.status(500).render('inventory', { inventory: [], message: 'Error loading inventory.' })
+    }
+}
+
 exports.updateStock = async (req, res) => {
     try {
         const {itemName, quantity} = req.body;
@@ -14,13 +24,22 @@ exports.updateStock = async (req, res) => {
     }
 }
 
+exports.addInventoryItem = async (req, res) => {
+    try {
+        const { itemName, quantity, minimumLevel, unit } = req.body;
+        await Inventory.create({ itemName, quantity, minimumLevel, unit })
+        res.status(201).json({ message: 'Item added to inventory' })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 exports.getLowStockAlerts = async (req, res) => {
     try {
         const lowStockItems = await Inventory.find({$expr: {$lt: ["$quantity", "$minimumLevel"]}})
-
-        res.status(200).json({message: 'Low Stock Alerts', inventory: lowStockItems})
+        res.render('lowstock', { lowStockItems })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: error.message})
+        res.status(500).render('lowstock', { lowStockItems: [], message: 'Error loading low stock alerts.' })
     }
 }

@@ -25,11 +25,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "",
-    }, createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now(),
     }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Order', orderSchema)

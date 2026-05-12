@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book a Table</title>
+</head>
+<body>
+    <h1>Table Reservation</h1>
+    <a href="/home">Back to Lobby</a>
+    <form id="resForm">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="customerName" required>
+        </div>
+        <div>
+            <label>Date & Time:</label>
+            <input type="datetime-local" name="reservationDate" required>
+        </div>
+        <div>
+            <label>Guests:</label>
+            <input type="number" name="guestCount" required>
+        </div>
+        <div>
+            <label>Table ID:</label>
+            <input type="text" name="tableId" value="<%= typeof query !== 'undefined' && query.tableId ? query.tableId : '' %>" required>
+        </div>
+        <div>
+            <label>Phone:</label>
+            <input type="tel" name="phone">
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email">
+        </div>
+        <button type="submit">Confirm Reservation</button>
+    </form>
+
+    <script>
+        document.getElementById('resForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const res = await fetch('/reservations/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            alert(result.message);
+            if(res.ok) window.location.href = '/home';
+        });
+    </script>
+</body>
+</html>

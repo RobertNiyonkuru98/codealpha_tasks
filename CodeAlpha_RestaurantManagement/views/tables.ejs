@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tables</title>
+</head>
+<body>
+    <h1>Restaurant Tables</h1>
+    <a href="/home">Back to Lobby</a>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <p><strong><%= message %></strong></p>
+    <% } %>
+
+    <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+        <section>
+            <h2>Add New Table</h2>
+            <form id="addTableForm">
+                <div>
+                    <label>Table Number:</label>
+                    <input type="number" name="tableNumber" required>
+                </div>
+                <div>
+                    <label>Capacity (seats):</label>
+                    <input type="number" name="capacity" required>
+                </div>
+                <div>
+                    <label>Location (e.g. Indoor, Outdoor):</label>
+                    <input type="text" name="location">
+                </div>
+                <button type="submit">Add Table</button>
+            </form>
+        </section>
+        <hr>
+    <% } %>
+
+    <section>
+        <h2>All Tables</h2>
+        <% if (tables && tables.length > 0) { %>
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Table Number</th>
+                        <th>Capacity</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <% if (user && user.role === 'customer') { %>
+                            <th>Reserve</th>
+                        <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% tables.forEach(table => { %>
+                        <tr>
+                            <td><%= table.tableNumber %></td>
+                            <td><%= table.capacity %> seats</td>
+                            <td><%= table.location || '-' %></td>
+                            <td><%= table.status %></td>
+                            <% if (user && user.role === 'customer') { %>
+                                <td>
+                                    <% if (table.status === 'available') { %>
+                                        <a href="/reservations?tableId=<%= table._id %>">Book this table</a>
+                                    <% } else { %>
+                                        Not Available
+                                    <% } %>
+                                </td>
+                            <% } %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No tables found.</p>
+        <% } %>
+    </section>
+
+    <script>
+        const addTableForm = document.getElementById('addTableForm');
+        if (addTableForm) {
+            addTableForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                const res = await fetch('/tables/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (res.ok) location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

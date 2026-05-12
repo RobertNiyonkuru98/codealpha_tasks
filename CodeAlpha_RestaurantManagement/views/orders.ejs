@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Management</title>
+</head>
+<body>
+    <h1>Order Management</h1>
+    <a href="/home">Back to Lobby</a>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <p><strong><%= message %></strong></p>
+    <% } %>
+
+    <section>
+        <h2>All Orders</h2>
+        <% if (orders && orders.length > 0) { %>
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Table</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td><%= order._id %></td>
+                            <td><%= order.tableId ? order.tableId.tableNumber || order.tableId : 'N/A' %></td>
+                            <td>$<%= order.totalAmount.toFixed(2) %></td>
+                            <td><%= order.status %></td>
+                            <td><%= order.paymentStatus %></td>
+                            <td>
+                                <% if (order.paymentStatus !== 'paid') { %>
+                                    <button class="completeBtn" data-id="<%= order._id %>">Mark Complete & Paid</button>
+                                <% } else { %>
+                                    Done
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No orders found.</p>
+        <% } %>
+    </section>
+
+    <script>
+        document.querySelectorAll('.completeBtn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const orderId = btn.dataset.id;
+                const res = await fetch(`/orders/${orderId}/complete`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (res.ok) location.reload();
+            });
+        });
+    </script>
+</body>
+</html>

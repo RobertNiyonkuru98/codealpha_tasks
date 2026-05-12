@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Menu</title>
+</head>
+<body>
+    <h1>Restaurant Menu</h1>
+    <a href="/home">Back to Lobby</a>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <p style="color:red;"><strong><%= error %></strong></p>
+    <% } %>
+
+    <!-- ADD MENU ITEM FORM: only visible to admin and manager -->
+    <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+        <section>
+            <h2>Add New Menu Item</h2>
+
+            <!-- 
+                enctype="multipart/form-data" is REQUIRED for file uploads.
+                The form is submitted normally (not via fetch) so the file can be sent.
+            -->
+            <form id="addMenuItemForm" enctype="multipart/form-data">
+                <div>
+                    <label>Item Name: *</label><br>
+                    <input type="text" name="name" required>
+                </div>
+                <div>
+                    <label>Price ($): *</label><br>
+                    <input type="number" name="price" step="0.01" min="0" required>
+                </div>
+                <div>
+                    <label>Description:</label><br>
+                    <textarea name="description" rows="3" cols="40"></textarea>
+                </div>
+                <div>
+                    <label>Category: *</label><br>
+                    <select name="category" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="Starter">Starter</option>
+                        <option value="Main">Main</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Drinks">Drinks</option>
+                        <option value="Sides">Sides</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Ingredients (comma separated):</label><br>
+                    <input type="text" name="ingredients" placeholder="e.g. Flour, Tomato, Cheese">
+                </div>
+
+                <fieldset>
+                    <legend>Item Image (choose one option)</legend>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="imageMode" value="upload" checked>
+                            Upload from computer
+                        </label>
+                        <br>
+                        <input type="file" id="imageFile" name="image" accept="image/jpeg,image/png,image/webp">
+                        <br>
+                        <img id="imagePreview" src="" alt="Preview" width="120" style="display:none; margin-top:6px;">
+                    </div>
+
+                    <br>
+
+                    <div>
+                        <label>
+                            <input type="radio" name="imageMode" value="url">
+                            Use image URL (from the web)
+                        </label>
+                        <br>
+                        <input type="text" id="imageUrlInput" name="imageUrl" placeholder="https://example.com/image.jpg" disabled>
+                    </div>
+                </fieldset>
+
+                <br>
+                <button type="submit">Add Menu Item</button>
+                <span id="formStatus"></span>
+            </form>
+        </section>
+        <hr>
+    <% } %>
+
+    <!-- MENU DISPLAY: visible to everyone -->
+    <section>
+        <h2>Our Menu</h2>
+
+        <% if (typeof menuItems !== 'undefined' && menuItems.length > 0) { %>
+
+            <%
+                // Group items by category
+                const categories = [...new Set(menuItems.map(i => i.category))];
+            %>
+
+            <% categories.forEach(cat => { %>
+                <h3><%= cat %></h3>
+                <div style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <% menuItems.filter(i => i.category === cat).forEach(item => { %>
+                        <div style="border:1px solid #ccc; padding:12px; width:220px;">
+                            <% if (item.imageUrl) { %>
+                                <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="200" height="140" style="object-fit:cover;">
+                            <% } else { %>
+                                <div style="width:200px; height:140px; background:#eee; display:flex; align-items:center; justify-content:center;">
+                                    <span>No Image</span>
+                                </div>
+                            <% } %>
+                            <h4><%= item.name %></h4>
+                            <p>$<%= item.price.toFixed(2) %></p>
+                            <p><%= item.description %></p>
+                            <small>Ingredients: <%= item.ingredients.join(', ') || 'N/A' %></small>
+                        </div>
+                    <% }); %>
+                </div>
+            <% }); %>
+
+        <% } else { %>
+            <p>No menu items available yet.</p>
+        <% } %>
+    </section>
+
+    <script>
+        // Toggle between upload and URL input
+        const radios = document.querySelectorAll('input[name="imageMode"]');
+        const fileInput = document.getElementById('imageFile');
+        const urlInput = document.getElementById('imageUrlInput');
+        const preview = document.getElementById('imagePreview');
+
+        if (radios.length > 0) {
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    if (radio.value === 'upload') {
+                        fileInput.disabled = false;
+                        urlInput.disabled = true;
+                        urlInput.value = '';
+                    } else {
+                        fileInput.disabled = true;
+                        urlInput.disabled = false;
+                        fileInput.value = '';
+                        preview.style.display = 'none';
+                    }
+                });
+            });
+
+            // Show image preview when file is selected
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Submit the form via fetch (FormData handles file upload automatically)
+            document.getElementById('addMenuItemForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const status = document.getElementById('formStatus');
+                status.textContent = 'Saving...';
+
+                const formData = new FormData(e.target);
+
+                // If URL mode is selected, remove the file field so it doesn't confuse multer
+                const mode = formData.get('imageMode');
+                if (mode === 'url') {
+                    formData.delete('image');
+                } else {
+                    formData.delete('imageUrl');
+                }
+
+                const res = await fetch('/menu/add', {
+                    method: 'POST',
+                    body: formData  // Do NOT set Content-Type header - browser sets it with boundary
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    status.textContent = '';
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    status.textContent = 'Error: ' + result.message;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

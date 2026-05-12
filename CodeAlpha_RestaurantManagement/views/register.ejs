@@ -2,45 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/menu">Menu</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/register">Register</a></li>
-                <li><a href="/login">Login</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h1>Register</h1>
-            <form action="/register" method="POST">
+    <h1>Create Account</h1>
+    <form action="/" method="POST">
         <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
+            <label>Name:</label>
+            <input type="text" name="name" required>
         </div>
         <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <label>Email:</label>
+            <input type="email" name="email" required>
         </div>
         <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+        </div>
+        <div>
+            <label>Mobile:</label>
+            <input type="text" name="mobile_number">
+        </div>
+        <div>
+            <label>Gender:</label>
+            <select name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div>
+            <label>Register as:</label>
+            <select name="role">
+                <option value="customer">Customer</option>
+                <option value="staff">Staff</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+            </select>
         </div>
         <button type="submit">Register</button>
     </form>
-    <a href="/login">Login</a>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Restaurant Management</p>
-    </footer>
+    <p>Already have an account? <a href="/login">Login here</a></p>
 </body>
 </html>

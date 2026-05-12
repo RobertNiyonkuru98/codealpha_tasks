@@ -3,6 +3,14 @@ const Table = require('../models/tables.js')
 const MenuItem = require('../models/menuItems.js')
 const Inventory = require('../models/inventories.js')
 
+exports.getOrdersPage = async (req, res) => {
+    try {
+        const orders = await Order.find().populate('tableId').populate('items')
+        res.render('orders', { orders, message: null })
+    } catch (error) {
+        res.status(500).render('orders', { orders: [], message: 'Error loading orders.' })
+    }
+}
 
 exports.createOrder = async (req, res) => {
     try {
@@ -23,11 +31,10 @@ exports.createOrder = async (req, res) => {
             status: 'pending',
             paymentStatus: 'unpaid'
         })
-        await newOrder.save();
 
-        await Table.findByIdAndUpdate(tableId, {status:'occupied'})
+        await Table.findByIdAndUpdate(tableId, {status: 'occupied'})
 
-        res.status(201).json(newOrder)
+        res.status(201).json({ message: 'Order placed successfully!', order: newOrder })
     } catch (error) {
         res.status(500).json({message: error.message})
     }

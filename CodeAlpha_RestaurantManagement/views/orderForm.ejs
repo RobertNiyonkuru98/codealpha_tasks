@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Order</title>
+</head>
+<body>
+    <h1>Place Your Order</h1>
+    <a href="/home">Back to Lobby</a>
+    <form id="orderForm">
+        <div>
+            <label>Table ID:</label>
+            <input type="text" name="tableId" required>
+        </div>
+        <div>
+            <label>Item IDs (comma separated):</label>
+            <input type="text" name="itemIds" required>
+        </div>
+        <button type="submit">Place Order</button>
+    </form>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+                tableId: formData.get('tableId'),
+                itemIds: formData.get('itemIds').split(',').map(id => id.trim())
+            };
+
+            const res = await fetch('/orders/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            alert(result.message || 'Order Placed Successfully!');
+            if(res.ok) window.location.href = '/home';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= reportType %></title>
+</head>
+<body>
+    <h1><%= reportType %></h1>
+    <a href="/home">Back to Lobby</a>
+    <nav>
+        <a href="/reports/daily-sales">Daily Report</a> |
+        <a href="/reports/weekly-sales">Weekly Report</a>
+    </nav>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <p><strong>Error:</strong> <%= message %></p>
+    <% } %>
+
+    <section>
+        <h2>Summary</h2>
+        <p><strong>Period:</strong> <%= date %></p>
+        <p><strong>Total Orders (Paid):</strong> <%= orderCount %></p>
+        <p><strong>Total Revenue:</strong> $<%= totalSales.toFixed(2) %></p>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Order Breakdown</h2>
+        <% if (orders && orders.length > 0) { %>
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Table</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td><%= order._id %></td>
+                            <td><%= order.tableId %></td>
+                            <td>$<%= order.totalAmount.toFixed(2) %></td>
+                            <td><%= order.status %></td>
+                            <td><%= order.paymentStatus %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No paid orders found for this period.</p>
+        <% } %>
+    </section>
+</body>
+</html>

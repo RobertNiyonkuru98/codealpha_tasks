@@ -1,19 +1,12 @@
 const mongoose = require('mongoose')
 
 const menuSchema = new mongoose.Schema({
-    menuId: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
     name: {
         type: String,
         required: true,
-        default: "",
     },
     description: {
         type: String,
-        required: true,
         default: "",
     },
     price: {
@@ -27,20 +20,17 @@ const menuSchema = new mongoose.Schema({
         default: "",
     },
     availability: {
-        type: String,
-        required: true,
-        default: "",
+        type: Boolean,
+        default: true,
     },
     ingredients: {
         type: [String],
-        required: true,
         default: [],
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now(),
+    imageUrl: {
+        type: String,  // Stores either an uploaded file path or a web URL
+        default: "",
     },
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Menu', menuSchema)

@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { createTable, getAllTables } = require('../controllers/tableController')
+const { getAllTables, createTable } = require('../controllers/tablesController')
+const { isAuthenticated, authoriseRoles } = require('../middleware/auth')
 
-router.get('/get/tables', getAllTables)
-router.post('/add/table', createTable)
+router.get('/', isAuthenticated, getAllTables)
+
+router.post('/add', isAuthenticated, authoriseRoles('manager', 'admin'), createTable)
 
 module.exports = router;

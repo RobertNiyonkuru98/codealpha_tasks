@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const {addMenuItem, getMenu} = require('../controllers/menuController')
+const { getMenu, addMenuItem, upload } = require('../controllers/menuController')
+const { isAuthenticated, authoriseRoles } = require('../middleware/auth')
 
-router.post('/add/menu', addMenuItem)
-router.get('/get/menu', getMenu)
+router.get('/', isAuthenticated, getMenu)
+
+router.post('/add', isAuthenticated, authoriseRoles('manager', 'admin'), upload.single('image'), addMenuItem)
 
 module.exports = router;

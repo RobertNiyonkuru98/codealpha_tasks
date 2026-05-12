@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const initializePassport = require('../config/passport-config')
 
-initializePassport(passport, email => Users.findOne({email: email}), id => Users.findOne({userId: id}))
+initializePassport(passport, email => Users.findOne({email: email}), id => Users.findById(id))
 
 exports.register = async (req, res) => {
     try {

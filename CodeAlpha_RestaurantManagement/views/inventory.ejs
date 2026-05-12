@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Management</title>
+</head>
+<body>
+    <h1>Inventory Management</h1>
+    <a href="/home">Back to Lobby</a>
+    <nav>
+        <a href="/inventory/lowstock">View Low Stock Alerts</a>
+    </nav>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <p><strong><%= message %></strong></p>
+    <% } %>
+
+    <section>
+        <h2>Add New Inventory Item</h2>
+        <form id="addItemForm">
+            <div>
+                <label>Item Name:</label>
+                <input type="text" name="itemName" required>
+            </div>
+            <div>
+                <label>Quantity:</label>
+                <input type="number" name="quantity" required>
+            </div>
+            <div>
+                <label>Minimum Level (for alerts):</label>
+                <input type="number" name="minimumLevel" required>
+            </div>
+            <div>
+                <label>Unit (e.g. kg, pieces):</label>
+                <input type="text" name="unit">
+            </div>
+            <button type="submit">Add Item</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Current Inventory</h2>
+        <% if (inventory && inventory.length > 0) { %>
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Minimum Level</th>
+                        <th>Unit</th>
+                        <th>Status</th>
+                        <th>Update Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% inventory.forEach(item => { %>
+                        <tr>
+                            <td><%= item.itemName %></td>
+                            <td><%= item.quantity %></td>
+                            <td><%= item.minimumLevel %></td>
+                            <td><%= item.unit || '-' %></td>
+                            <td><%= item.quantity < item.minimumLevel ? 'LOW STOCK' : 'OK' %></td>
+                            <td>
+                                <form class="updateForm" data-name="<%= item.itemName %>">
+                                    <input type="number" name="qty" placeholder="Add/Remove qty" required>
+                                    <button type="submit">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No inventory items found. Add some above.</p>
+        <% } %>
+    </section>
+
+    <script>
+        // Add new item
+        document.getElementById('addItemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const res = await fetch('/inventory/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            alert(result.message);
+            if (res.ok) location.reload();
+        });
+
+        // Update stock
+        document.querySelectorAll('.updateForm').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const itemName = form.dataset.name;
+                const quantity = parseInt(form.querySelector('[name="qty"]').value);
+                const res = await fetch('/inventory/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ itemName, quantity })
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (res.ok) location.reload();
+            });
+        });
+    </script>
+</body>
+</html>

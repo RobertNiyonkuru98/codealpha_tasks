@@ -1,9 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const { createOrder, completeOrder } = require('../controllers/orderController')
-const {isAuthenticated, authoriseRoles} = require('../middleware/auth')
+const { getOrdersPage, createOrder, completeOrder } = require('../controllers/orderController')
+const { isAuthenticated, authoriseRoles } = require('../middleware/auth')
 
-router.post('/create/order', isAuthenticated, authoriseRoles('customer'), createOrder)
-router.put('/complete/order/:orderId', isAuthenticated, authoriseRoles('manager', 'admin'), completeOrder)
+router.get('/new', isAuthenticated, authoriseRoles('customer'), (req, res) => res.render('orderForm'))
+
+router.get('/', isAuthenticated, authoriseRoles('manager', 'admin'), getOrdersPage)
+
+router.post('/create', isAuthenticated, authoriseRoles('customer'), createOrder)
+
+router.put('/:orderId/complete', isAuthenticated, authoriseRoles('manager', 'admin'), completeOrder)
 
 module.exports = router;
