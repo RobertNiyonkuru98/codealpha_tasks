@@ -2,53 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Book a Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Spatial Node - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>Table Reservation</h1>
-    <a href="/home">Back to Lobby</a>
-    <form id="resForm">
-        <div>
-            <label>Name:</label>
-            <input type="text" name="customerName" required>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/tables">Tables</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
         </div>
-        <div>
-            <label>Date & Time:</label>
-            <input type="datetime-local" name="reservationDate" required>
+    </header>
+
+    <main style="display:flex; align-items:center; justify-content:center;">
+        <div class="form-container" style="width:100%; max-width:750px; margin:1rem 0;">
+            <h1 class="page-title" style="font-size:2.2rem; margin-bottom:0.5rem; text-align:center; display:block;">Spatial Geometry Lock</h1>
+            <p style="color:var(--text-muted); text-align:center; margin-bottom:2rem;">Secure a temporal pocket inside our restaurant environment.</p>
+
+            <form id="resForm">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+                    <div class="form-group">
+                        <label>Manifested Name *</label>
+                        <input type="text" name="customerName" class="form-control" placeholder="Wanda Maximoff" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Temporal Coordinates (Date/Time) *</label>
+                        <input type="datetime-local" name="reservationDate" class="form-control" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+                    <div class="form-group">
+                        <label>Entity Headcount (Guests) *</label>
+                        <input type="number" name="guestCount" class="form-control" min="1" placeholder="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Target Spatial Node (Table ID) *</label>
+                        <input type="text" name="tableId" class="form-control" value="<%= typeof query !== 'undefined' && query.tableId ? query.tableId : '' %>" placeholder="Hash pointer..." required>
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>Secondary Contact Variables</legend>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Telephony Relay</label>
+                            <input type="tel" name="phone" class="form-control" placeholder="+1 (555) 019-2834">
+                        </div>
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Digital Routing (Email)</label>
+                            <input type="email" name="email" class="form-control" placeholder="wanda@maximoff.anomaly">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div style="display:flex; justify-content:flex-end; align-items:center; gap:1rem; margin-top:1rem;">
+                    <span id="resStatus" style="color:var(--primary-glow); font-weight:600;"></span>
+                    <button type="submit" class="btn" style="width:100%;">Finalize Convergence</button>
+                </div>
+            </form>
         </div>
-        <div>
-            <label>Guests:</label>
-            <input type="number" name="guestCount" required>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
         </div>
-        <div>
-            <label>Table ID:</label>
-            <input type="text" name="tableId" value="<%= typeof query !== 'undefined' && query.tableId ? query.tableId : '' %>" required>
-        </div>
-        <div>
-            <label>Phone:</label>
-            <input type="tel" name="phone">
-        </div>
-        <div>
-            <label>Email:</label>
-            <input type="email" name="email">
-        </div>
-        <button type="submit">Confirm Reservation</button>
-    </form>
+    </footer>
 
     <script>
         document.getElementById('resForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const status = document.getElementById('resStatus');
+            status.textContent = 'Validating Matrix...';
+
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
 
-            const res = await fetch('/reservations/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            const result = await res.json();
-            alert(result.message);
-            if(res.ok) window.location.href = '/home';
+            try {
+                const res = await fetch('/reservations/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                status.textContent = '';
+                alert(result.message);
+                if(res.ok) window.location.href = '/home';
+            } catch (err) {
+                status.textContent = 'Anomaly detected. Interrupted.';
+            }
         });
     </script>
 </body>

@@ -2,57 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><%= reportType %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= reportType %> - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1><%= reportType %></h1>
-    <a href="/home">Back to Lobby</a>
-    <nav>
-        <a href="/reports/daily-sales">Daily Report</a> |
-        <a href="/reports/weekly-sales">Weekly Report</a>
-    </nav>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/reports/daily-sales" class="<%= reportType.includes('Daily') ? 'active' : '' %>">Daily Convergence</a></li>
+                    <li><a href="/reports/weekly-sales" class="<%= reportType.includes('Weekly') ? 'active' : '' %>">Weekly Cycle</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <% if (typeof message !== 'undefined' && message) { %>
-        <p><strong>Error:</strong> <%= message %></p>
-    <% } %>
+    <main>
+        <div style="margin-bottom:2rem;">
+            <h1 class="page-title"><%= reportType %></h1>
+            <p style="color:var(--text-muted); margin-top:0.5rem;">Comprehensive aggregate revenue tracking and global lifecycle node review.</p>
+        </div>
 
-    <section>
-        <h2>Summary</h2>
-        <p><strong>Period:</strong> <%= date %></p>
-        <p><strong>Total Orders (Paid):</strong> <%= orderCount %></p>
-        <p><strong>Total Revenue:</strong> $<%= totalSales.toFixed(2) %></p>
-    </section>
-
-    <hr>
-
-    <section>
-        <h2>Order Breakdown</h2>
-        <% if (orders && orders.length > 0) { %>
-            <table border="1" cellpadding="8">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Table</th>
-                        <th>Total Amount</th>
-                        <th>Status</th>
-                        <th>Payment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% orders.forEach(order => { %>
-                        <tr>
-                            <td><%= order._id %></td>
-                            <td><%= order.tableId %></td>
-                            <td>$<%= order.totalAmount.toFixed(2) %></td>
-                            <td><%= order.status %></td>
-                            <td><%= order.paymentStatus %></td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } else { %>
-            <p>No paid orders found for this period.</p>
+        <% if (typeof message !== 'undefined' && message) { %>
+            <div class="alert alert-error">
+                <strong>Analysis Exception:</strong> <%= message %>
+            </div>
         <% } %>
-    </section>
+
+        <!-- TOP LEVEL LEDGER SUMMARY -->
+        <section>
+            <div class="grid-container" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); margin-bottom:3rem;">
+                <div class="card" style="border-left:4px solid var(--burgundy);">
+                    <span style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Evaluated Interval</span>
+                    <strong style="font-size:1.1rem; color:var(--text-main); margin-top:0.5rem; display:block;"><%= date %></strong>
+                </div>
+                <div class="card" style="border-left:4px solid var(--primary);">
+                    <span style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Paid Tickets Cleared</span>
+                    <strong style="font-size:1.8rem; color:var(--text-main); margin-top:0.2rem; display:block;"><%= orderCount %></strong>
+                </div>
+                <div class="card" style="border-left:4px solid var(--primary-glow); background:linear-gradient(135deg, rgba(23,7,10,1) 0%, rgba(36,11,16,1) 100%);">
+                    <span style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Aggregate Yield</span>
+                    <strong style="font-size:2.2rem; color:var(--primary-glow); margin-top:0.1rem; display:block;">$<%= totalSales.toFixed(2) %></strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSACTIONAL SUB-LEDGER -->
+        <section>
+            <h2 class="section-title">Transactional Node Log</h2>
+            <% if (orders && orders.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction Pointer</th>
+                                <th>Assigned Vector</th>
+                                <th>Captured Cost</th>
+                                <th>Lifecycle State</th>
+                                <th>Ledger Integration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td><span style="font-family:monospace; color:var(--text-muted);"><%= order._id %></span></td>
+                                    <td><strong style="color:var(--text-main);"><%= order.tableId ? 'Target Hash Set' : 'Autonomous Vector' %></strong></td>
+                                    <td style="color:var(--text-main); font-weight:600;">$<%= order.totalAmount.toFixed(2) %></td>
+                                    <td><span class="status-badge status-completed"><%= order.status %></span></td>
+                                    <td><span class="status-badge status-paid">VERIFIED ACCRUAL</span></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:3rem 1rem;">
+                    <p style="color:var(--text-muted); font-size:1.1rem;">No verified accruals logged within this target interval array.</p>
+                </div>
+            <% } %>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
 </body>
 </html>

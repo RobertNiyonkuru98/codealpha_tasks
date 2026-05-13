@@ -2,40 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Low Stock Alerts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos Alerts - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>Low Stock Alerts</h1>
-    <a href="/inventory">Back to Inventory</a> | <a href="/home">Back to Lobby</a>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/inventory">Inventory</a></li>
+                    <li><a href="/inventory/lowstock" class="active">Chaos Alerts</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <section>
-        <% if (lowStockItems && lowStockItems.length > 0) { %>
-            <p><strong>Warning:</strong> The following items are running low and need to be restocked.</p>
-            <table border="1" cellpadding="8">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Current Quantity</th>
-                        <th>Minimum Level</th>
-                        <th>Unit</th>
-                        <th>Shortage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% lowStockItems.forEach(item => { %>
-                        <tr>
-                            <td><%= item.itemName %></td>
-                            <td><%= item.quantity %></td>
-                            <td><%= item.minimumLevel %></td>
-                            <td><%= item.unit || '-' %></td>
-                            <td><%= item.minimumLevel - item.quantity %> units short</td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } else { %>
-            <p>All inventory items are sufficiently stocked. No alerts at this time.</p>
-        <% } %>
-    </section>
+    <main>
+        <div style="margin-bottom:2rem;">
+            <h1 class="page-title" style="color:#ff4d6d; text-shadow:0 0 15px rgba(255, 77, 109, 0.5);">Chaos Convergence Alerts</h1>
+            <p style="color:var(--text-muted); margin-top:0.5rem;">Immediate telemetry notification array representing severely depleted ingredient modules.</p>
+        </div>
+
+        <section>
+            <% if (lowStockItems && lowStockItems.length > 0) { %>
+                <div class="alert alert-error">
+                    <strong>Critical Telemetry Warning:</strong> The following dimensional properties are beneath their established security threshold layers.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Element Sub-Token</th>
+                                <th>Current Volume</th>
+                                <th>Security Baseline</th>
+                                <th>Unit Scaler</th>
+                                <th>Absolute Deficit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% lowStockItems.forEach(item => { %>
+                                <tr>
+                                    <td><strong style="color:#ff4d6d;"><%= item.itemName %></strong></td>
+                                    <td><span style="color:var(--text-main); font-weight:700;"><%= item.quantity %></span></td>
+                                    <td><%= item.minimumLevel %></td>
+                                    <td><%= item.unit || 'Standard Units' %></td>
+                                    <td><span style="color:var(--primary-glow); font-weight:600;"><%= item.minimumLevel - item.quantity %> Units Sub-Zero</span></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top:2rem; text-align:center;">
+                    <a href="/inventory" class="btn">Deploy Restock Matrices</a>
+                </div>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:4rem 1rem;">
+                    <span style="font-size:3rem; color:#2ec4b6; display:block; margin-bottom:1rem;">⚡</span>
+                    <h3 style="color:var(--text-main); margin-bottom:0.5rem;">All Systems Balanced</h3>
+                    <p style="color:var(--text-muted);">Storage containers retain correct numerical mass arrays. No anomalous volume holes detected.</p>
+                </div>
+            <% } %>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
 </body>
 </html>

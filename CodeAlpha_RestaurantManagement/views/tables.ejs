@@ -2,95 +2,153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tables</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Geometries - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>Restaurant Tables</h1>
-    <a href="/home">Back to Lobby</a>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/tables" class="active">Tables</a></li>
+                    <% if (user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } else { %>
+                        <li><a href="/login" class="btn-logout" style="margin-left:1rem;">Login</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <% if (typeof message !== 'undefined' && message) { %>
-        <p><strong><%= message %></strong></p>
-    <% } %>
+    <main>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <div>
+                <h1 class="page-title">Table Matrix</h1>
+                <p style="color:var(--text-muted); margin-top:0.5rem;">Review seating layouts and current spatial availability.</p>
+            </div>
+            <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+                <a href="#addTableSection" class="btn">＋ Initialize Table</a>
+            <% } %>
+        </div>
+
+        <% if (typeof message !== 'undefined' && message) { %>
+            <div class="alert alert-info">
+                <strong>Notification:</strong> <%= message %>
+            </div>
+        <% } %>
+
+        <section>
+            <h2 class="section-title">Active Grid Geometries</h2>
+            
+            <% if (tables && tables.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Identifier</th>
+                                <th>Volume Capacity</th>
+                                <th>Sector Location</th>
+                                <th>Matrix State</th>
+                                <% if (user && user.role === 'customer') { %>
+                                    <th style="text-align:right;">Interactions</th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% tables.forEach(table => { %>
+                                <tr>
+                                    <td><strong style="color:var(--text-main);"># <%= table.tableNumber %></strong></td>
+                                    <td><%= table.capacity %> Autonomous Units</td>
+                                    <td><%= table.location || 'Central Nexus' %></td>
+                                    <td>
+                                        <span class="status-badge status-<%= table.status.toLowerCase() %>">
+                                            <%= table.status %>
+                                        </span>
+                                    </td>
+                                    <% if (user && user.role === 'customer') { %>
+                                        <td style="text-align:right;">
+                                            <% if (table.status === 'available') { %>
+                                                <a href="/reservations?tableId=<%= table._id %>" class="btn" style="padding:0.4rem 0.8rem; font-size:0.85rem;">Lock In Coordinates</a>
+                                            <% } else { %>
+                                                <span style="color:var(--border-color); font-size:0.85rem;">Unavailable</span>
+                                            <% } %>
+                                        </td>
+                                    <% } %>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:3rem 1rem;">
+                    <p style="color:var(--text-muted); font-size:1.1rem;">No table nodes have been configured in the master array.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+            <div id="addTableSection" style="margin-top:4rem;">
+                <h2 class="section-title">Inject New Coordinate</h2>
+                <div class="form-container" style="max-width:100%; margin:0;">
+                    <form id="addTableForm">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem;">
+                            <div class="form-group">
+                                <label>Node Number *</label>
+                                <input type="number" name="tableNumber" class="form-control" placeholder="101" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Volume Capacity *</label>
+                                <input type="number" name="capacity" class="form-control" placeholder="4" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Spatial Sector</label>
+                                <input type="text" name="location" class="form-control" placeholder="West Anomaly Wing">
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+                            <button type="submit" class="btn">Deploy Array Node</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <% } %>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
 
     <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
-        <section>
-            <h2>Add New Table</h2>
-            <form id="addTableForm">
-                <div>
-                    <label>Table Number:</label>
-                    <input type="number" name="tableNumber" required>
-                </div>
-                <div>
-                    <label>Capacity (seats):</label>
-                    <input type="number" name="capacity" required>
-                </div>
-                <div>
-                    <label>Location (e.g. Indoor, Outdoor):</label>
-                    <input type="text" name="location">
-                </div>
-                <button type="submit">Add Table</button>
-            </form>
-        </section>
-        <hr>
-    <% } %>
-
-    <section>
-        <h2>All Tables</h2>
-        <% if (tables && tables.length > 0) { %>
-            <table border="1" cellpadding="8">
-                <thead>
-                    <tr>
-                        <th>Table Number</th>
-                        <th>Capacity</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <% if (user && user.role === 'customer') { %>
-                            <th>Reserve</th>
-                        <% } %>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% tables.forEach(table => { %>
-                        <tr>
-                            <td><%= table.tableNumber %></td>
-                            <td><%= table.capacity %> seats</td>
-                            <td><%= table.location || '-' %></td>
-                            <td><%= table.status %></td>
-                            <% if (user && user.role === 'customer') { %>
-                                <td>
-                                    <% if (table.status === 'available') { %>
-                                        <a href="/reservations?tableId=<%= table._id %>">Book this table</a>
-                                    <% } else { %>
-                                        Not Available
-                                    <% } %>
-                                </td>
-                            <% } %>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } else { %>
-            <p>No tables found.</p>
-        <% } %>
-    </section>
-
-    <script>
-        const addTableForm = document.getElementById('addTableForm');
-        if (addTableForm) {
-            addTableForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = Object.fromEntries(formData.entries());
-                const res = await fetch('/tables/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+        <script>
+            const addTableForm = document.getElementById('addTableForm');
+            if (addTableForm) {
+                addTableForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData.entries());
+                    try {
+                        const res = await fetch('/tables/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await res.json();
+                        alert(result.message);
+                        if (res.ok) location.reload();
+                    } catch (err) {
+                        alert('Matrix deployment severed.');
+                    }
                 });
-                const result = await res.json();
-                alert(result.message);
-                if (res.ok) location.reload();
-            });
-        }
-    </script>
+            }
+        </script>
+    <% } %>
 </body>
 </html>
