@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Matrix - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/orders" class="active">Orders</a></li>
+                    <li><a href="/inventory">Inventory</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div style="margin-bottom:2rem;">
+            <h1 class="page-title">Active Order Arrays</h1>
+            <p style="color:var(--text-muted); margin-top:0.5rem;">Monitor kitchen dispatch flow and confirm operational ticket completion.</p>
+        </div>
+
+        <% if (typeof message !== 'undefined' && message) { %>
+            <div class="alert alert-info">
+                <strong>Notice:</strong> <%= message %>
+            </div>
+        <% } %>
+
+        <section>
+            <% if (orders && orders.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Hash Token (ID)</th>
+                                <th>Spatial Node</th>
+                                <th>Total Due</th>
+                                <th>Lifecycle State</th>
+                                <th>Payment Grid</th>
+                                <th style="text-align:right;">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td><span style="font-family:monospace; color:var(--text-muted);"><%= order._id.toString().substring(0, 8) %>...</span></td>
+                                    <td><strong style="color:var(--text-main);"><%= order.tableId ? (order.tableId.tableNumber ? 'Table #' + order.tableId.tableNumber : 'Node Verified') : 'Direct Node' %></strong></td>
+                                    <td style="color:var(--primary-glow); font-weight:600;">$<%= order.totalAmount.toFixed(2) %></td>
+                                    <td><span class="status-badge status-<%= order.status.toLowerCase() %>"><%= order.status %></span></td>
+                                    <td><span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>"><%= order.paymentStatus %></span></td>
+                                    <td style="text-align:right;">
+                                        <% if (order.paymentStatus !== 'paid') { %>
+                                            <button class="btn completeBtn" data-id="<%= order._id %>" style="padding:0.4rem 0.8rem; font-size:0.85rem;">Mark Settled</button>
+                                        <% } else { %>
+                                            <span style="color:#2ec4b6; font-size:0.85rem; font-weight:600;">✓ Archival Ready</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:3rem 1rem;">
+                    <p style="color:var(--text-muted); font-size:1.1rem;">No customer tickets currently populated in the order matrix.</p>
+                </div>
+            <% } %>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.completeBtn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const orderId = btn.dataset.id;
+                try {
+                    const res = await fetch(`/orders/${orderId}/complete`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await res.json();
+                    alert(result.message);
+                    if (res.ok) location.reload();
+                } catch (err) {
+                    alert('Command integration dropped.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

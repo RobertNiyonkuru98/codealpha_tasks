@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby Dashboard - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <div style="display:flex; align-items:center;">
+                <% if (user) { %>
+                    <span class="user-greeting">Welcome, <strong style="color:var(--text-main);"><%= user.name %></strong></span>
+                <% } %>
+                <a href="/logout" class="btn-logout">Disconnect</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div style="margin-bottom:2rem;">
+            <h1 class="page-title">Command Matrix</h1>
+            <p style="color:var(--text-muted); font-size:1.1rem; margin-top:0.5rem;">Select your operational parameters below.</p>
+        </div>
+
+        <h2 class="section-title">Public Features</h2>
+        <div class="grid-container">
+            <div class="card">
+                <div>
+                    <h3 class="card-title">Divine Menu</h3>
+                    <p class="card-body">Explore handcrafted anomalies, signature hexes, and visually spectacular cuisine options tailored for our guests.</p>
+                </div>
+                <div>
+                    <a href="/menu" class="card-link">View Menu</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h3 class="card-title">Table Matrix</h3>
+                    <p class="card-body">Review standard seating geometries, room layout environments, and current physical placement coordinates.</p>
+                </div>
+                <div>
+                    <a href="/tables" class="card-link">View Tables</a>
+                </div>
+            </div>
+        </div>
+
+        <% if (user && user.role === 'customer') { %>
+            <h2 class="section-title">Customer Terminal</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Reserve Geometry</h3>
+                        <p class="card-body">Secure your physical location in advance. Lock in preferred tables, precise temporal variables, and group party scaling.</p>
+                    </div>
+                    <div>
+                        <a href="/reservations" class="card-link">Book a Table</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Manifest Order</h3>
+                        <p class="card-body">Directly signal the back-of-house kitchen matrix to prepare menu items for your designated table coordinates.</p>
+                    </div>
+                    <div>
+                        <a href="/orders/new" class="card-link">Place an Order</a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+            <h2 class="section-title">Administrative Operations</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Order Lifecycle</h3>
+                        <p class="card-body">Supervise active restaurant delivery arrays, finalize payment states, and clear assigned tables dynamically.</p>
+                    </div>
+                    <div>
+                        <a href="/orders" class="card-link">Manage Orders</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Inventory Subsystem</h3>
+                        <p class="card-body">Add raw molecular ingredient parameters, review aggregate volume arrays, and tweak numerical stock counts.</p>
+                    </div>
+                    <div>
+                        <a href="/inventory" class="card-link">Manage Inventory</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Chaos Stock Alerts</h3>
+                        <p class="card-body">Instantly detect critical resource shortages when raw ingredient counts drop beneath their defined safety barriers.</p>
+                    </div>
+                    <div>
+                        <a href="/inventory/lowstock" class="card-link">Low Stock Monitor</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Daily Ledger</h3>
+                        <p class="card-body">Compile current solar day financial records, aggregate paid ticket sums, and audit completed table turnover.</p>
+                    </div>
+                    <div>
+                        <a href="/reports/daily-sales" class="card-link">Daily Sales</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 class="card-title">Weekly Convergence</h3>
+                        <p class="card-body">Analyze global 7-day cyclical income figures, comprehensive transactional logs, and top-level performance yields.</p>
+                    </div>
+                    <div>
+                        <a href="/reports/weekly-sales" class="card-link">Weekly Sales</a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
+</body>
+</html>

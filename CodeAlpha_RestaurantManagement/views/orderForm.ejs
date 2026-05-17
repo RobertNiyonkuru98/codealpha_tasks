@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifest Order - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/menu">Menu</a></li>
+                    <li><a href="/tables">Tables</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main style="display:flex; align-items:center; justify-content:center;">
+        <div class="form-container" style="width:100%; margin:2rem 0;">
+            <h1 class="page-title" style="font-size:2.2rem; margin-bottom:0.5rem; text-align:center; display:block;">Inject Direct Order</h1>
+            <p style="color:var(--text-muted); text-align:center; margin-bottom:2rem;">Route customized menu identifiers directly to your operational coordinates.</p>
+
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>Target Node (Table ID string) *</label>
+                    <input type="text" name="tableId" class="form-control" placeholder="5f9b3b3b3b3b3b3b3b3b3b3b" required>
+                    <small style="color:var(--burgundy); margin-top:4px; display:block;">Copy your specific node ID hash from the <a href="/tables" style="color:var(--primary-glow);">Table Matrix</a>.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Menu Payload (Item IDs comma separated) *</label>
+                    <textarea name="itemIds" class="form-control" rows="3" placeholder="61a2b3c..., 61a2b3d..." required></textarea>
+                    <small style="color:var(--text-muted); margin-top:4px; display:block;">Enter unique MongoDB string tokens representing your target dishes.</small>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; align-items:center; gap:1rem; margin-top:2rem;">
+                    <span id="orderStatus" style="color:var(--primary-glow); font-weight:600;"></span>
+                    <button type="submit" class="btn" style="width:100%;">Transmit Order Array</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('orderStatus');
+            status.textContent = 'Transmitting...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                tableId: formData.get('tableId').trim(),
+                itemIds: formData.get('itemIds').split(',').map(id => id.trim()).filter(id => id)
+            };
+
+            try {
+                const res = await fetch('/orders/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                status.textContent = '';
+                alert(result.message || 'Order Placed Successfully!');
+                if(res.ok) window.location.href = '/home';
+            } catch (err) {
+                status.textContent = 'Transmission dropped.';
+            }
+        });
+    </script>
+</body>
+</html>

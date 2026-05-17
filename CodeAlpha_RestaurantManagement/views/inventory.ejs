@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecular Inventory - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/orders">Orders</a></li>
+                    <li><a href="/inventory" class="active">Inventory</a></li>
+                    <li><a href="/inventory/lowstock">Chaos Alerts</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <div>
+                <h1 class="page-title">Molecular Inventory</h1>
+                <p style="color:var(--text-muted); margin-top:0.5rem;">Audit raw dimensional elements and adjust active container balances.</p>
+            </div>
+            <a href="#addSection" class="btn">＋ Add Element</a>
+        </div>
+
+        <% if (typeof message !== 'undefined' && message) { %>
+            <div class="alert alert-info">
+                <strong>Notification:</strong> <%= message %>
+            </div>
+        <% } %>
+
+        <section>
+            <h2 class="section-title">Active Element Balances</h2>
+            <% if (inventory && inventory.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Element Name</th>
+                                <th>Scalar Quantity</th>
+                                <th>Safety Limit</th>
+                                <th>Metrics Unit</th>
+                                <th>Equilibrium</th>
+                                <th style="text-align:right;">Delta Controls</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% inventory.forEach(item => { %>
+                                <tr>
+                                    <td><strong style="color:var(--text-main);"><%= item.itemName %></strong></td>
+                                    <td><span style="font-size:1.1rem; font-weight:600;"><%= item.quantity %></span></td>
+                                    <td><%= item.minimumLevel %></td>
+                                    <td><%= item.unit || 'Units' %></td>
+                                    <td>
+                                        <% if (item.quantity < item.minimumLevel) { %>
+                                            <span class="status-badge status-low">CRITICAL DRAIN</span>
+                                        <% } else { %>
+                                            <span class="status-badge status-ok">STABLE</span>
+                                        <% } %>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <form class="inline-form updateForm" data-name="<%= item.itemName %>" style="justify-content:flex-end;">
+                                            <input type="number" name="qty" class="form-control" placeholder="± Qty" required style="width:90px; padding:0.4rem;">
+                                            <button type="submit" class="btn" style="padding:0.4rem 0.8rem;">Apply</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:3rem 1rem;">
+                    <p style="color:var(--text-muted); font-size:1.1rem;">No elemental nodes currently established in the back-of-house storage subsystem.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <div id="addSection" style="margin-top:4rem;">
+            <h2 class="section-title">Synthesize New Element</h2>
+            <div class="form-container" style="max-width:100%; margin:0;">
+                <form id="addItemForm">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem;">
+                        <div class="form-group">
+                            <label>Element Identity *</label>
+                            <input type="text" name="itemName" class="form-control" placeholder="Vibranium Salt" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Initial Volume *</label>
+                            <input type="number" name="quantity" class="form-control" placeholder="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Alert Barrier (Min Level) *</label>
+                            <input type="number" name="minimumLevel" class="form-control" placeholder="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Scale Parameter (Unit)</label>
+                            <input type="text" name="unit" class="form-control" placeholder="grams">
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+                        <button type="submit" class="btn">Deploy Storage Matrix</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('addItemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const res = await fetch('/inventory/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (res.ok) location.reload();
+            } catch (err) {
+                alert('Storage integration drop.');
+            }
+        });
+
+        document.querySelectorAll('.updateForm').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const itemName = form.dataset.name;
+                const quantity = parseInt(form.querySelector('[name="qty"]').value);
+                try {
+                    const res = await fetch('/inventory/update', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ itemName, quantity })
+                    });
+                    const result = await res.json();
+                    alert(result.message);
+                    if (res.ok) location.reload();
+                } catch (err) {
+                    alert('Scalar change severed.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

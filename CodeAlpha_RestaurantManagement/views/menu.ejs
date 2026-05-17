@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divine Menu - Hexcraft Dining</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/home" class="logo">HEXCRAFT <span>RESTO</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/home">Lobby</a></li>
+                    <li><a href="/menu" class="active">Menu</a></li>
+                    <li><a href="/tables">Tables</a></li>
+                    <% if (user) { %>
+                        <li><a href="/logout" class="btn-logout" style="margin-left:1rem;">Disconnect</a></li>
+                    <% } else { %>
+                        <li><a href="/login" class="btn-logout" style="margin-left:1rem;">Login</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <div>
+                <h1 class="page-title">Divine Menu</h1>
+                <p style="color:var(--text-muted); margin-top:0.5rem;">Savor our mystical anomalies and hex-infused dishes.</p>
+            </div>
+            <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+                <a href="#addSection" class="btn">＋ Add Menu Item</a>
+            <% } %>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-error">
+                <strong>Error:</strong> <%= error %>
+            </div>
+        <% } %>
+
+        <!-- MENU DISPLAY -->
+        <section>
+            <% if (typeof menuItems !== 'undefined' && menuItems.length > 0) { %>
+                <% const categories = [...new Set(menuItems.map(i => i.category))]; %>
+                
+                <% categories.forEach(cat => { %>
+                    <h2 class="section-title"><%= cat %></h2>
+                    <div class="menu-grid">
+                        <% menuItems.filter(i => i.category === cat).forEach(item => { %>
+                            <div class="menu-card">
+                                <div class="menu-img-wrapper">
+                                    <% if (item.imageUrl) { %>
+                                        <img src="<%= item.imageUrl %>" alt="<%= item.name %>" class="menu-img">
+                                    <% } else { %>
+                                        <div class="menu-img-placeholder">HEXCRAFT</div>
+                                    <% } %>
+                                </div>
+                                <div class="menu-content">
+                                    <div>
+                                        <div class="menu-header">
+                                            <h3 class="menu-title"><%= item.name %></h3>
+                                            <span class="menu-price">$<%= item.price.toFixed(2) %></span>
+                                        </div>
+                                        <p class="menu-desc"><%= item.description || 'No specific attributes defined.' %></p>
+                                    </div>
+                                    <div class="menu-ingredients">
+                                        <strong>Elements:</strong> <%= item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'Pure Chaos' %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="card" style="text-align:center; padding:3rem 1rem;">
+                    <p style="color:var(--text-muted); font-size:1.1rem;">No manifestations populated in the menu array.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <!-- ADD MENU ITEM FORM -->
+        <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+            <div id="addSection" style="margin-top:4rem;">
+                <h2 class="section-title">Manifest New Dish</h2>
+                <div class="form-container" style="max-width:100%; margin:0;">
+                    <form id="addMenuItemForm" enctype="multipart/form-data">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;">
+                            <div class="form-group">
+                                <label>Item Name *</label>
+                                <input type="text" name="name" class="form-control" placeholder="Chaos Goulash" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Price ($) *</label>
+                                <input type="number" name="price" step="0.01" min="0" class="form-control" placeholder="18.99" required>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;">
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select name="category" class="form-control" required>
+                                    <option value="">-- Select Geometry --</option>
+                                    <option value="Starter">Starter</option>
+                                    <option value="Main">Main</option>
+                                    <option value="Dessert">Dessert</option>
+                                    <option value="Drinks">Drinks</option>
+                                    <option value="Sides">Sides</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Elements (comma separated)</label>
+                                <input type="text" name="ingredients" class="form-control" placeholder="Darkhold Dust, Saffron, Thyme">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description Attributes</label>
+                            <textarea name="description" class="form-control" placeholder="Slow-simmered anomalies with robust dimensional profiles."></textarea>
+                        </div>
+
+                        <fieldset>
+                            <legend>Visual Projection (Image Source)</legend>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;">
+                                <div>
+                                    <label class="radio-group">
+                                        <input type="radio" name="imageMode" value="upload" checked>
+                                        <span style="color:var(--text-main); font-weight:600;">Upload Matrix</span>
+                                    </label>
+                                    <input type="file" id="imageFile" name="image" class="form-control" accept="image/jpeg,image/png,image/webp" style="margin-top:0.5rem;">
+                                    <img id="imagePreview" src="" alt="Preview" width="100%" style="display:none; margin-top:1rem; border-radius:8px; border:1px solid var(--border-color); max-height:160px; object-fit:cover;">
+                                </div>
+                                <div>
+                                    <label class="radio-group">
+                                        <input type="radio" name="imageMode" value="url">
+                                        <span style="color:var(--text-main); font-weight:600;">Remote Telemetry (URL)</span>
+                                    </label>
+                                    <input type="text" id="imageUrlInput" name="imageUrl" class="form-control" placeholder="https://domain.com/anomaly.jpg" style="margin-top:0.5rem;" disabled>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div style="display:flex; justify-content:flex-end; align-items:center; gap:1rem;">
+                            <span id="formStatus" style="color:var(--primary-glow); font-weight:600;"></span>
+                            <button type="submit" class="btn">Inject Into Matrix</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <% } %>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-brand">HEXCRAFT RESTO &copy; 2026</p>
+            <p style="font-size:0.8rem;">Powered by Chaos Magic & Professional Hospitality</p>
+        </div>
+    </footer>
+
+    <% if (user && (user.role === 'admin' || user.role === 'manager')) { %>
+        <script>
+            const radios = document.querySelectorAll('input[name="imageMode"]');
+            const fileInput = document.getElementById('imageFile');
+            const urlInput = document.getElementById('imageUrlInput');
+            const preview = document.getElementById('imagePreview');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    if (radio.value === 'upload') {
+                        fileInput.disabled = false;
+                        urlInput.disabled = true;
+                        urlInput.value = '';
+                    } else {
+                        fileInput.disabled = true;
+                        urlInput.disabled = false;
+                        fileInput.value = '';
+                        preview.style.display = 'none';
+                    }
+                });
+            });
+
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('addMenuItemForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const status = document.getElementById('formStatus');
+                status.textContent = 'Projecting...';
+
+                const formData = new FormData(e.target);
+                if (formData.get('imageMode') === 'url') {
+                    formData.delete('image');
+                } else {
+                    formData.delete('imageUrl');
+                }
+
+                try {
+                    const res = await fetch('/menu/add', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await res.json();
+                    if (res.ok) {
+                        status.textContent = '';
+                        alert(result.message);
+                        location.reload();
+                    } else {
+                        status.textContent = 'Anomaly: ' + result.message;
+                    }
+                } catch (err) {
+                    status.textContent = 'Connection severed.';
+                }
+            });
+        </script>
+    <% } %>
+</body>
+</html>
