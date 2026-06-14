@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Hexcraft Dining</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
     <header>
         <div class="header-container">
             <a href="/" class="logo">HEXCRAFT <span>RESTO</span></a>
             <nav>
                 <ul>
-                    <li><a href="/">Register</a></li>
+                    <li><a href="/register">Register</a></li>
                     <li><a href="/login" class="active">Login</a></li>
                 </ul>
             </nav>
@@ -21,31 +23,38 @@
 
     <main style="display:flex; align-items:center; justify-content:center;">
         <div class="form-container" style="width:100%; margin:2rem 0;">
-            <h1 class="page-title" style="font-size:2rem; margin-bottom:1.5rem; text-align:center; display:block;">Enter The Anomaly</h1>
-            
+            <h1 class="page-title" style="font-size:2rem; margin-bottom:1.5rem; text-align:center; display:block;">Enter
+                The Anomaly</h1>
+
             <% if (messages && messages.error) { %>
                 <div class="alert alert-error">
-                    <strong>Notice:</strong> <%= messages.error %>
+                    <strong>Notice:</strong>
+                    <%= messages.error %>
                 </div>
-            <% } %>
+                <% } %>
 
-            <form action="/login" method="POST">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="wanda@maximoff.anomaly" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required>
-                </div>
-                <button type="submit" class="btn" style="width:100%; margin-top:1rem;">Access Dashboard</button>
-            </form>
-            
-            <div style="text-align:center; margin-top:1.5rem; border-top:1px solid var(--border-color); padding-top:1rem;">
-                <p style="color:var(--text-muted); font-size:0.95rem;">
-                    Unregistered Anomaly? <a href="/" style="color:var(--primary-glow); text-decoration:none; font-weight:600;">Initialize Profile</a>
-                </p>
-            </div>
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control"
+                                placeholder="wanda@maximoff.anomaly" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="••••••••••••" required>
+                        </div>
+                        <button type="submit" class="btn" style="width:100%; margin-top:1rem;">Access Dashboard</button>
+                    </form>
+
+                    <div
+                        style="text-align:center; margin-top:1.5rem; border-top:1px solid var(--border-color); padding-top:1rem;">
+                        <p style="color:var(--text-muted); font-size:0.95rem;">
+                            Unregistered Anomaly? <a href="/register"
+                                style="color:var(--primary-glow); text-decoration:none; font-weight:600;">Initialize
+                                Profile</a>
+                        </p>
+                    </div>
         </div>
     </main>
 
@@ -56,4 +65,5 @@
         </div>
     </footer>
 </body>
+
 </html>

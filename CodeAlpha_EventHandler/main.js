@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
@@ -15,12 +15,12 @@ const flash = require('express-flash')
 const session = require('express-session')
 const passport = require('passport')
 
-db.on('error', () => console.error(err))
+db.on('error', (err) => console.error(err))
 db.once('open', () => console.log('Connected to Database'))
 
 app.set('view engine', 'ejs')
 app.use(express.static('public')) // Serve CSS, images, etc.
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,

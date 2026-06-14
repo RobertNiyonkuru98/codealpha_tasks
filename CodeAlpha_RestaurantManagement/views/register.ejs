@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Initialize Profile - Hexcraft Dining</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
     <header>
         <div class="header-container">
             <a href="/" class="logo">HEXCRAFT <span>RESTO</span></a>
             <nav>
                 <ul>
-                    <li><a href="/" class="active">Register</a></li>
+                    <li><a href="/register" class="active">Register</a></li>
                     <li><a href="/login">Login</a></li>
                 </ul>
             </nav>
@@ -21,9 +23,10 @@
 
     <main style="display:flex; align-items:center; justify-content:center;">
         <div class="form-container" style="width:100%; margin:1rem 0;">
-            <h1 class="page-title" style="font-size:2rem; margin-bottom:1.5rem; text-align:center; display:block;">Create Account</h1>
-            
-            <form action="/" method="POST">
+            <h1 class="page-title" style="font-size:2rem; margin-bottom:1.5rem; text-align:center; display:block;">
+                Create Account</h1>
+
+            <form action="/register" method="POST">
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Wanda Maximoff" required>
@@ -40,7 +43,7 @@
                     <label>Mobile Number</label>
                     <input type="text" name="mobile_number" class="form-control" placeholder="+1 (555) 019-2834">
                 </div>
-                
+
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="form-group">
                         <label>Gender</label>
@@ -63,10 +66,12 @@
 
                 <button type="submit" class="btn" style="width:100%; margin-top:1rem;">Manifest Profile</button>
             </form>
-            
-            <div style="text-align:center; margin-top:1.5rem; border-top:1px solid var(--border-color); padding-top:1rem;">
+
+            <div
+                style="text-align:center; margin-top:1.5rem; border-top:1px solid var(--border-color); padding-top:1rem;">
                 <p style="color:var(--text-muted); font-size:0.95rem;">
-                    Already integrated? <a href="/login" style="color:var(--primary-glow); text-decoration:none; font-weight:600;">Authenticate Here</a>
+                    Already integrated? <a href="/login"
+                        style="color:var(--primary-glow); text-decoration:none; font-weight:600;">Authenticate Here</a>
                 </p>
             </div>
         </div>
@@ -79,4 +84,5 @@
         </div>
     </footer>
 </body>
+
 </html>
